@@ -26,7 +26,7 @@ obj["score"] = 95
 res = objectBucket.update(obj["_id"], obj, obj["etag"])
 print("update:", res)
 
-res = objectBucket.query({}, 0, -1)
+res = objectBucket.query({}, None, 0, -1)
 print("query:", res)
 
 res = objectBucket.remove_with_query({})
