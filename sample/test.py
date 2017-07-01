@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-import json
 import os
 import sys
 
@@ -12,10 +11,7 @@ from config import CONFIG
 service = nebula.Service(CONFIG);
 
 # login test
-nebula.User.login(service, {
-    "username": "user1",
-    "password": "Passw0rD"
-})
+nebula.User.login_with_username(service, "user1", "Passw0rD")
 
 # object bucket query test
 objectBucket = nebula.ObjectBucket(service, "test2")
