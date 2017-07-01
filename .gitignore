@@ -1,5 +1,9 @@
 *~
 *.bak
+*.pyc
+
+MANIFEST
+dist/
 
 .idea/
 *.iml
