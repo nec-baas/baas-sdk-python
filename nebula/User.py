@@ -7,7 +7,13 @@ class User():
 
     @staticmethod
     def login(service, param):
-        f = service.execute_request("POST", "/login", json.dumps(param).encode("utf-8"))
+        """
+        ログインする。
+        :param service: Service
+        :param param: dictionary。JSON化されてサーバにそのまま送信される。通常は username, email のいずれかと、password を指定する
+        :return:
+        """
+        f = service.execute_rest("POST", "/login", None, json.dumps(param).encode("utf-8"))
         res = json.loads(f.read())
 
         session_token = res["sessionToken"]
