@@ -8,7 +8,8 @@ except ImportError:
     import urllib2 as urllib_request
     import urllib2 as urllib_parse
 
-class Service():
+
+class Service:
     """
     BaaSアクセス用サービスクラス。
     """

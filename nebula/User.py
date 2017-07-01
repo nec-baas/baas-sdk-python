@@ -1,9 +1,14 @@
 # -*- coding: UTF-8 -*-
 import json
 
-class User():
-    def __init__():
-        pass
+
+class User:
+    """
+    ユーザ
+    """
+
+    def __init__(self, service):
+        self.service = service
 
     @staticmethod
     def login(service, param):
