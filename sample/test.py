@@ -17,3 +17,10 @@ nebula.User.login(service, {
     "password": "Passw0rD"
 })
 
+# object bucket query test
+bucket1 = nebula.ObjectBucket(service, "test2")
+res = bucket1.query({}, 0, -1)
+print(res)
+
+# file download test
+bucket2 = nebula.FileBucket(service, "test1")
