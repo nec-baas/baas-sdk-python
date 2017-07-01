@@ -11,7 +11,8 @@ from config import CONFIG
 service = nebula.Service(CONFIG);
 
 # login test
-nebula.User.login_with_username(service, "user1", "Passw0rD")
+res = nebula.User.login_with_username(service, "user1", "Passw0rD")
+print("login result:", res)
 
 # object bucket query test
 objectBucket = nebula.ObjectBucket(service, "test2")
@@ -38,3 +39,7 @@ print(res.read())
 
 res = fileBucket.remove("test.txt")
 print(res)
+
+# logout
+res = nebula.User.logout(service)
+print("logout:", res)

@@ -50,5 +50,16 @@ class User:
         res = json.loads(f.read())
 
         session_token = res["sessionToken"]
-        print(session_token)
         service.set_session_token(session_token)
+        return res
+
+    @staticmethod
+    def logout(service):
+        """
+        ログアウトする
+        :param service: Service
+        :return:
+        """
+        f = service.execute_rest("DELETE", "/login")
+        res = json.loads(f.read())
+        return res
