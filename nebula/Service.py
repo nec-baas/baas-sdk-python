@@ -6,7 +6,7 @@ try:
 except ImportError:
     # for python 2
     import urllib2 as urllib_request
-    import urllib2 as urllib_parse
+    import urllib as urllib_parse
 
 
 class Service:
