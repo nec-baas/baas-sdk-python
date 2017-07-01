@@ -21,37 +21,35 @@ class Service:
         self.param = param
         self.sessionToken = None
 
-    def execute_rest(self, method, path, query=None, data=None, content_type=None):
+    def execute_rest(self, method, path, query=None, data=None, headers=None):
         """
         REST API を実行する
         :param str method: HTTPメソッド名
         :param str path: パス。/1/{tenantId} の後のパス。先頭に '/' を付ける。
         :param dict query: クエリパラメータ。Dictionary で指定。
         :param data: 送信データ。bytes, file-like object, iterables のいずれか。
-        :param str content_type: Content-Type。
+        :param dict headers: headers
         :return: file-like object
         """
         url = self.param["baseUrl"] + "/1/" + self.param["tenantId"] + path
         if query is not None:
             url += "?" + urllib_parse.urlencode(query)
 
-        headers = {
-            "X-Application-Id": self.param["appId"],
-            "X-Application-Key": self.param["appKey"]
-        }
+        if headers is None:
+            headers = {}
+
+        headers["X-Application-Id"] = self.param["appId"]
+        headers["X-Application-Key"] = self.param["appKey"]
 
         if self.sessionToken is not None:
             headers["X-Session-Token"] = self.sessionToken
 
-        if content_type is None and data is not None:
-            content_type = "application/json"
-
-        if content_type is not None:
-            headers["Content-Type"] = content_type
+        if "Content-Type" not in headers and data is not None:
+            headers["Content-Type"] = "application/json"
 
         req = urllib_request.Request(url, data, headers)
         req.get_method = lambda: method
-        
+
         if "proxy" in self.param:
             req.set_proxy(self.param["proxy"]["host"], self.param["proxy"]["type"])
 

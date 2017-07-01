@@ -18,9 +18,27 @@ nebula.User.login(service, {
 })
 
 # object bucket query test
-bucket1 = nebula.ObjectBucket(service, "test2")
-res = bucket1.query({}, 0, -1)
+objectBucket = nebula.ObjectBucket(service, "test2")
+res = objectBucket.query({}, 0, -1)
 print(res)
 
-# file download test
-bucket2 = nebula.FileBucket(service, "test1")
+# file upload/download test
+fileBucket = nebula.FileBucket(service, "test1")
+
+acl = {
+    "r": ["g:anonymous"],
+    "w": ["g:anonymous"]
+}
+
+res = fileBucket.upload("test.txt", "TESTDATA".encode("utf-8"), "plain/text", acl)
+#res = bucket2.update("test.txt", "TESTDATA".encode("utf-8"), "plain/text")
+print(res)
+
+res = fileBucket.query()
+print(res)
+
+res = fileBucket.download("test.txt")
+print(res.read())
+
+res = fileBucket.remove("test.txt")
+print(res)
