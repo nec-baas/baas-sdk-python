@@ -62,4 +62,5 @@ class User:
         """
         f = service.execute_rest("DELETE", "/login")
         res = json.loads(f.read())
+        service.set_session_token(None)
         return res

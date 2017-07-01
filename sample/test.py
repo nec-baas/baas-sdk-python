@@ -14,10 +14,25 @@ service = nebula.Service(CONFIG);
 res = nebula.User.login_with_username(service, "user1", "Passw0rD")
 print("login result:", res)
 
-# object bucket query test
+print()
+
+# object bucket
 objectBucket = nebula.ObjectBucket(service, "test2")
+
+obj = objectBucket.insert({"score": 90})
+print("insert:", obj)
+
+obj["score"] = 95
+res = objectBucket.update(obj["_id"], obj, obj["etag"])
+print("update:", res)
+
 res = objectBucket.query({}, 0, -1)
-print(res)
+print("query:", res)
+
+res = objectBucket.remove_with_query({})
+print("delete:", res)
+
+print()
 
 # file upload/download test
 fileBucket = nebula.FileBucket(service, "test1")
