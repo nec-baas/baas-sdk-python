@@ -68,4 +68,4 @@ class FileBucket:
         """
         f = self.service.execute_rest("DELETE", self._get_file_path(filename))
         res = json.loads(f.read())
-        return res;
+        return res

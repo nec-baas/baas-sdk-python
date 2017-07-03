@@ -57,7 +57,8 @@ class ObjectBucket:
         if etag is not None:
             query_params["etag"] = etag
 
-        f = self.service.execute_rest("PUT", "/objects/" + self.bucketName + "/" + id, query_params, json.dumps(data).encode("utf-8"))
+        f = self.service.execute_rest("PUT", "/objects/" + self.bucketName + "/" + id,
+                                      query_params, json.dumps(data).encode("utf-8"))
         res = json.loads(f.read())
         return res
 
