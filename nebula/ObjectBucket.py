@@ -10,11 +10,11 @@ class ObjectBucket:
         self.service = service
         self.bucketName = bucket_name
 
-    def query(self, where=None, sort=None, skip=0, limit=None):
+    def query(self, where=None, order=None, skip=0, limit=None):
         """
         クエリ
         :param dict where: クエリ条件
-        :param str sort: ソート条件
+        :param str order: ソート条件
         :param int skip: スキップカウント
         :param int limit: 上限数
         :return:
@@ -23,8 +23,8 @@ class ObjectBucket:
 
         if where is not None:
             query_params["where"] = json.dumps(where)
-        if sort is not None:
-            query_params["sort"] = sort
+        if order is not None:
+            query_params["order"] = order
         if skip > 0:
             query_params["skip"] = skip
         if limit is not None:
