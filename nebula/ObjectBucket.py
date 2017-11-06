@@ -10,13 +10,14 @@ class ObjectBucket:
         self.service = service
         self.bucketName = bucket_name
 
-    def query(self, where=None, order=None, skip=0, limit=None):
+    def query(self, where=None, order=None, skip=0, limit=None, projection=None):
         """
         クエリ
         :param dict where: クエリ条件
         :param str order: ソート条件
         :param int skip: スキップカウント
         :param int limit: 上限数
+        :param dict projection: プロジェクション
         :return:
         """
         query_params = {}
@@ -29,6 +30,8 @@ class ObjectBucket:
             query_params["skip"] = skip
         if limit is not None:
             query_params["limit"] = limit
+        if projection is not None:
+            query_params["projection"] = json.dumps(projection)
 
         f = self.service.execute_rest("GET", "/objects/" + self.bucketName, query_params)
         res = json.loads(f.read())
