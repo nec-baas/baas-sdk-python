@@ -1,8 +1,8 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 import json
 
 
-class FileBucket:
+class FileBucket(object):
     """
     ファイルバケット
     """

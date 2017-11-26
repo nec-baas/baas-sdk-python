@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 try:
     # for python 3
     import urllib.request as urllib_request
@@ -9,7 +9,7 @@ except ImportError:
     import urllib as urllib_parse
 
 
-class Service:
+class Service(object):
     """
     BaaSアクセス用サービスクラス。
     """
