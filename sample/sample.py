@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import sys
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__) + "../"))
+sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/../"))
 import nebula
 
 from config import CONFIG

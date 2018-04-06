@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 from .Service import Service
 from .User import User
 from .ObjectBucket import ObjectBucket
