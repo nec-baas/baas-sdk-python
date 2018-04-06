@@ -1,4 +1,7 @@
-from distutils.core import setup
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from setuptools import setup
 
 setup(name='necbaas',
       version='0.0.2',
