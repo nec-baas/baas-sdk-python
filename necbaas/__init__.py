@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from .Service import Service
-from .User import User
-from .ObjectBucket import ObjectBucket
-from .FileBucket import FileBucket
-
-
+from .service import Service
+from .user import User
+from .object_bucket import ObjectBucket
+from .file_bucket import FileBucket
