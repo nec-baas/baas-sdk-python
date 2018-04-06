@@ -4,20 +4,20 @@ import os
 import sys
 
 sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/../"))
-import nebula
+import necbaas as baas
 
 from config import CONFIG
 
-service = nebula.Service(CONFIG);
+service = baas.Service(CONFIG);
 
 # login test
-res = nebula.User.login_with_username(service, "user1", "Passw0rD")
+res = baas.User.login_with_username(service, "user1", "Passw0rD")
 print("login result:", res)
 
 print()
 
 # object bucket
-objectBucket = nebula.ObjectBucket(service, "test2")
+objectBucket = baas.ObjectBucket(service, "test2")
 
 obj = objectBucket.insert({"score": 90})
 print("insert:", obj)
@@ -35,7 +35,7 @@ print("delete:", res)
 print()
 
 # file upload/download test
-fileBucket = nebula.FileBucket(service, "test1")
+fileBucket = baas.FileBucket(service, "test1")
 
 acl = {
     "r": ["g:anonymous"],
@@ -56,5 +56,5 @@ res = fileBucket.remove("test.txt")
 print(res)
 
 # logout
-res = nebula.User.logout(service)
+res = baas.User.logout(service)
 print("logout:", res)
