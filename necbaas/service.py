@@ -54,9 +54,12 @@ class Service(object):
             req.set_proxy(self.param["proxy"]["host"], self.param["proxy"]["type"])
 
         try:
-            return urllib_request.urlopen(req)
+            return self._urlopen(req)
         except Exception as e:
             raise e  # TODO:
+
+    def _urlopen(self, req):
+        return urllib_request.urlopen(req)
 
     def set_session_token(self, token):
         """
