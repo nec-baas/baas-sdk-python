@@ -3,7 +3,7 @@ import json
 
 class Group(object):
     """
-    グループ
+    Group
     """
     def __init__(self, service, name):
         self.service = service

@@ -4,7 +4,7 @@ import json
 
 class User(object):
     """
-    ユーザ
+    User
     """
 
     def __init__(self, service):
@@ -17,10 +17,10 @@ class User(object):
     @staticmethod
     def login_with_username(service, username, password):
         """
-        ユーザ名でログインする
+        Login with user name
         :param service: Service
-        :param str username: ユーザ名
-        :param str password: パスワード
+        :param str username: User name
+        :param str password: Password
         :return:
         """
         return User.login(service, {
@@ -31,10 +31,10 @@ class User(object):
     @staticmethod
     def login_with_email(service, email, password):
         """
-        E-mailでログインする
+        Login with E-mail
         :param service: Service
-        :param str email: ユーザ名
-        :param str password: パスワード
+        :param str email: User name
+        :param str password: Password
         :return:
         """
         return User.login(service, {
@@ -45,10 +45,11 @@ class User(object):
     @staticmethod
     def login(service, param):
         """
-        ログインする。
+        Login
         :param service: Service
-        :param dict param: dictionary。JSON化されてサーバにそのまま送信される。通常は username, email のいずれかと、password を指定する
-        :return:
+        :param dict param: dictionary. The parameter is encoded in JSON and sent to server.
+        Usually contains username or email, and password.
+        :return: Response JSON in dictionary
         """
         f = service.execute_rest("POST", "/login", None, json.dumps(param).encode("utf-8"))
         res = json.loads(f.read())
@@ -60,7 +61,7 @@ class User(object):
     @staticmethod
     def logout(service):
         """
-        ログアウトする
+        Logout
         :param service: Service
         :return:
         """
@@ -71,9 +72,9 @@ class User(object):
 
     def register(self):
         """
-        ユーザ登録する。
-        username, email, password, options プロパティを設定しておくこと。
-        :return: 登録情報(JSON)
+        Register user.
+        Specify username, email, password and options properties.
+        :return: Registration info (JSON)
         """
         body = {}
         if self.username is not None:
@@ -92,8 +93,8 @@ class User(object):
     @staticmethod
     def query(self, username=None, email=None):
         """
-        ユーザ検索する
-        :param username: ユーザ名
+        Query user.
+        :param username: Username
         :param email: E-mail
         :return:
         """

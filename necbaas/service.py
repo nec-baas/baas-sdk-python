@@ -11,23 +11,31 @@ except ImportError:
 
 class Service(object):
     """
-    BaaSアクセス用サービスクラス。
+    BaaS access service class
     """
     def __init__(self, param):
         """
-        コンストラクタ。
-        :param dict param: パラメータを指定する。
+        Constructor.
+        params has following fields:
+        | baseUrl: Base URL of BaaS API Server (ex: https://api.example.com/api)
+        | tenantId: Tenant ID or Tenant Name
+        | appId: App ID
+        | appKey: App Key (or Master Key)
+        | proxy:
+        |   type: Proxy type ('http' or 'https')
+        |   host: Proxy host ('hostname:port')
+        :param dict param: Parameters
         """
         self.param = param
         self.sessionToken = None
 
     def execute_rest(self, method, path, query=None, data=None, headers=None):
         """
-        REST API を実行する
-        :param str method: HTTPメソッド名
-        :param str path: パス。/1/{tenantId} の後のパス。先頭に '/' を付ける。
-        :param dict query: クエリパラメータ。Dictionary で指定。
-        :param data: 送信データ。bytes, file-like object, iterables のいずれか。
+        Call REST API
+        :param str method: HTTP method name
+        :param str path: Path. The part after '/1/{tenantId}' of full path. Must be started with '/'.
+        :param dict query: Query parameters in dictionary.
+        :param data: Request body, in bytes, file-like object or iterable.
         :param dict headers: headers
         :return: file-like object
         """
@@ -63,8 +71,8 @@ class Service(object):
 
     def set_session_token(self, token):
         """
-        セッショントークンを保存する。セッショントークンはメモリ上にのみ保持される。
-        :param str token: セッショントークン
+        Store session token in this service. The token is stored on memory only.
+        :param str token: Session Token
         :return:
         """
         self.sessionToken = token

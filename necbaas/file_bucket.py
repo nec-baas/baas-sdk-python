@@ -4,7 +4,7 @@ import json
 
 class FileBucket(object):
     """
-    ファイルバケット
+    File Bucket
     """
     def __init__(self, service, bucket_name):
         self.service = service
@@ -12,8 +12,8 @@ class FileBucket(object):
 
     def query(self):
         """
-        ファイル一覧を取得する
-        :return:
+        Query file list.
+        :return: Response JSON
         """
         f = self.service.execute_rest("GET", "/files/" + self.bucketName)
         res = json.loads(f.read())
@@ -21,18 +21,19 @@ class FileBucket(object):
 
     def upload(self, filename, data, content_type="application/octet-stream", acl=None):
         """
-        ファイルをアップロードする
-        :praram str filename: ファイル名
-        :param data:
-        :return:
+        Upload file
+        :praram str filename: Filename
+        :param data: Data
+        :return: Response JSON
         """
         return self._upload(filename, data, content_type, "POST", acl)
 
     def update(self, filename, data, content_type="application/octet-stream"):
         """
         ファイルを更新する
-        :praram str filename: ファイル名
-        :param data:
+        :param str filename: ファイル名
+        :param data: Data
+        :param str content_type: Content-Type
         :return:
         """
         return self._upload(filename, data, content_type, "PUT", None)
@@ -53,8 +54,8 @@ class FileBucket(object):
 
     def download(self, filename):
         """
-        ファイルをダウンロードする
-        :param filename: ファイル名 
+        Download file
+        :param filename: Filename
         :return: file like object
         """
         f = self.service.execute_rest("GET", self._get_file_path(filename))
@@ -62,8 +63,8 @@ class FileBucket(object):
 
     def remove(self, filename):
         """
-        ファイルを削除する
-        :param str filename: ファイル名
+        Delete file
+        :param str filename: Filename
         :return:
         """
         f = self.service.execute_rest("DELETE", self._get_file_path(filename))

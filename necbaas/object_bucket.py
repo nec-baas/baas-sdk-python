@@ -4,7 +4,7 @@ import json
 
 class ObjectBucket(object):
     """
-    オブジェクトバケット
+    JSON Object Storage Bucket
     """
     def __init__(self, service, bucket_name):
         self.service = service
@@ -12,12 +12,12 @@ class ObjectBucket(object):
 
     def query(self, where=None, order=None, skip=0, limit=None, projection=None):
         """
-        クエリ
-        :param dict where: クエリ条件
-        :param str order: ソート条件
-        :param int skip: スキップカウント
-        :param int limit: 上限数
-        :param dict projection: プロジェクション
+        Query objects in this bucket
+        :param dict where: Query conditions (JSON)
+        :param str order: Sort conditions
+        :param int skip: Skip count
+        :param int limit: Limit count
+        :param dict projection: Projection (JSON)
         :return:
         """
         query_params = {}
