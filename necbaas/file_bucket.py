@@ -13,6 +13,7 @@ class FileBucket(object):
     def query(self):
         """
         Query file list.
+
         :return: Response JSON
         """
         f = self.service.execute_rest("GET", "/files/" + self.bucketName)
@@ -22,6 +23,7 @@ class FileBucket(object):
     def upload(self, filename, data, content_type="application/octet-stream", acl=None):
         """
         Upload file
+
         :praram str filename: Filename
         :param data: Data
         :return: Response JSON
@@ -30,7 +32,8 @@ class FileBucket(object):
 
     def update(self, filename, data, content_type="application/octet-stream"):
         """
-        ファイルを更新する
+        Update file
+
         :param str filename: ファイル名
         :param data: Data
         :param str content_type: Content-Type
@@ -55,6 +58,7 @@ class FileBucket(object):
     def download(self, filename):
         """
         Download file
+
         :param filename: Filename
         :return: file like object
         """
@@ -64,6 +68,7 @@ class FileBucket(object):
     def remove(self, filename):
         """
         Delete file
+
         :param str filename: Filename
         :return:
         """

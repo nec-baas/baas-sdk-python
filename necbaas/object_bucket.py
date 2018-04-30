@@ -13,6 +13,7 @@ class ObjectBucket(object):
     def query(self, where=None, order=None, skip=0, limit=None, projection=None):
         """
         Query objects in this bucket
+
         :param dict where: Query conditions (JSON)
         :param str order: Sort conditions
         :param int skip: Skip count
@@ -41,6 +42,7 @@ class ObjectBucket(object):
     def insert(self, data):
         """
         オブジェクトのINSERT
+
         :param dict data: データ
         :return: 挿入後のデータ
         """
@@ -51,6 +53,7 @@ class ObjectBucket(object):
     def update(self, id, data, etag=None):
         """
         オブジェクト更新
+
         :param id: ID
         :param data: データ
         :param etag: ETag
@@ -68,6 +71,7 @@ class ObjectBucket(object):
     def remove(self, id):
         """
         オブジェクト削除
+
         :param str id: ID
         :return:
         """
@@ -78,6 +82,7 @@ class ObjectBucket(object):
     def remove_with_query(self, where=None):
         """
         オブジェクト一括削除
+
         :param where: 検索条件
         :return:
         """

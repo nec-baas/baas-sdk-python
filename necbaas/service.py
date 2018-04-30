@@ -16,6 +16,7 @@ class Service(object):
     def __init__(self, param):
         """
         Constructor.
+
         params has following fields:
         | baseUrl: Base URL of BaaS API Server (ex: https://api.example.com/api)
         | tenantId: Tenant ID or Tenant Name
@@ -24,6 +25,7 @@ class Service(object):
         | proxy:
         |   type: Proxy type ('http' or 'https')
         |   host: Proxy host ('hostname:port')
+
         :param dict param: Parameters
         """
         self.param = param
@@ -32,6 +34,7 @@ class Service(object):
     def execute_rest(self, method, path, query=None, data=None, headers=None):
         """
         Call REST API
+
         :param str method: HTTP method name
         :param str path: Path. The part after '/1/{tenantId}' of full path. Must be started with '/'.
         :param dict query: Query parameters in dictionary.
@@ -72,6 +75,7 @@ class Service(object):
     def set_session_token(self, token):
         """
         Store session token in this service. The token is stored on memory only.
+
         :param str token: Session Token
         :return:
         """

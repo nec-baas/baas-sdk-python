@@ -18,6 +18,7 @@ class User(object):
     def login_with_username(service, username, password):
         """
         Login with user name
+
         :param service: Service
         :param str username: User name
         :param str password: Password
@@ -32,6 +33,7 @@ class User(object):
     def login_with_email(service, email, password):
         """
         Login with E-mail
+
         :param service: Service
         :param str email: User name
         :param str password: Password
@@ -46,6 +48,7 @@ class User(object):
     def login(service, param):
         """
         Login
+
         :param service: Service
         :param dict param: dictionary. The parameter is encoded in JSON and sent to server.
         Usually contains username or email, and password.
@@ -62,6 +65,7 @@ class User(object):
     def logout(service):
         """
         Logout
+
         :param service: Service
         :return:
         """
@@ -74,6 +78,7 @@ class User(object):
         """
         Register user.
         Specify username, email, password and options properties.
+
         :return: Registration info (JSON)
         """
         body = {}
@@ -94,6 +99,7 @@ class User(object):
     def query(self, username=None, email=None):
         """
         Query user.
+
         :param username: Username
         :param email: E-mail
         :return:
