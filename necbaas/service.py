@@ -13,6 +13,19 @@ class Service(object):
     """
     BaaS access service class.
 
+    Example::
+
+        service = necbaas.Service({
+            "baseUrl": "https://api.example.com/api",
+            "tenantId": "tenant1",
+            "appId": "0123456789abcdef",
+            "appKey": "0123456789abcdef",
+            "proxy": {
+                "type": "https",
+                "host": "proxy.example.com:8080"
+            }
+        })
+
     :param dict param:
         Parameters, must have following format::
 
