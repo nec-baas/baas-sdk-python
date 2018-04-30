@@ -5,6 +5,9 @@ import json
 class FileBucket(object):
     """
     File Bucket
+
+    :param Service service: Service
+    :param str bucket_name: Bucket name
     """
     def __init__(self, service, bucket_name):
         self.service = service

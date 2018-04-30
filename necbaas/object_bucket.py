@@ -4,7 +4,10 @@ import json
 
 class ObjectBucket(object):
     """
-    JSON Object Storage Bucket
+    JSON Object Storage Bucket.
+
+    :param Service service: Service
+    :param str bucket_name: Bucket name
     """
     def __init__(self, service, bucket_name):
         self.service = service

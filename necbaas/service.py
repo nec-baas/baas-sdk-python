@@ -11,22 +11,23 @@ except ImportError:
 
 class Service(object):
     """
-    BaaS access service class
+    BaaS access service class.
+
+    :param dict param:
+        Parameters, must have following format::
+
+            baseUrl: Base URL of BaaS API Server (ex: https://api.example.com/api) (mandatory)
+            tenantId: Tenant ID or Tenant Name (mandatory)
+            appId: App ID (mandatory)
+            appKey: App Key (or Master Key) (mandatory)
+            proxy: (optional)
+                type: Proxy type ('http' or 'https')
+                host: Proxy host ('hostname:port')
+
     """
     def __init__(self, param):
         """
         Constructor.
-
-        params has following fields:
-        | baseUrl: Base URL of BaaS API Server (ex: https://api.example.com/api)
-        | tenantId: Tenant ID or Tenant Name
-        | appId: App ID
-        | appKey: App Key (or Master Key)
-        | proxy:
-        |   type: Proxy type ('http' or 'https')
-        |   host: Proxy host ('hostname:port')
-
-        :param dict param: Parameters
         """
         self.param = param
         self.sessionToken = None

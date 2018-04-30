@@ -5,6 +5,8 @@ import json
 class User(object):
     """
     User
+
+    :param Service service: Service
     """
 
     def __init__(self, service):
@@ -22,7 +24,7 @@ class User(object):
         :param service: Service
         :param str username: User name
         :param str password: Password
-        :return:
+        :return: Response JSON in dictionary
         """
         return User.login(service, {
             "username": username,
@@ -37,7 +39,7 @@ class User(object):
         :param service: Service
         :param str email: User name
         :param str password: Password
-        :return:
+        :return: Response JSON in dictionary
         """
         return User.login(service, {
             "email": email,
@@ -51,7 +53,7 @@ class User(object):
 
         :param service: Service
         :param dict param: dictionary. The parameter is encoded in JSON and sent to server.
-        Usually contains username or email, and password.
+            Usually contains username or email, and password.
         :return: Response JSON in dictionary
         """
         f = service.execute_rest("POST", "/login", None, json.dumps(param).encode("utf-8"))
@@ -67,7 +69,7 @@ class User(object):
         Logout
 
         :param service: Service
-        :return:
+        :return: Response JSON in dictionary
         """
         f = service.execute_rest("DELETE", "/login")
         res = json.loads(f.read())
@@ -102,7 +104,7 @@ class User(object):
 
         :param username: Username
         :param email: E-mail
-        :return:
+        :return: Response JSON in dictionary
         """
         query = {}
         if username is not None:
