@@ -7,6 +7,17 @@ class User(object):
     User
 
     :param Service service: Service
+
+    Attributes
+    ----------
+    username : str
+        Username
+    email : str
+        E-mail address
+    password : str
+        Password
+    options : dict
+        Options
     """
 
     def __init__(self, service):
@@ -20,6 +31,10 @@ class User(object):
     def login_with_username(service, username, password):
         """
         Login with user name
+
+        Example::
+
+            result = necbaas.User.login_with_username(service, "foo", "Passw0rD")
 
         :param service: Service
         :param str username: User name
@@ -36,6 +51,10 @@ class User(object):
         """
         Login with E-mail
 
+        Example::
+
+            result = necbaas.User.login_with_email(service, "foo@example.com", "Passw0rD")
+
         :param service: Service
         :param str email: User name
         :param str password: Password
@@ -50,6 +69,13 @@ class User(object):
     def login(service, param):
         """
         Login
+
+        Example::
+
+            result = necbaas.User.login(service, {
+                "username": "foo",
+                "password": "Passw0rD"
+            })
 
         :param service: Service
         :param dict param: dictionary. The parameter is encoded in JSON and sent to server.
@@ -81,6 +107,14 @@ class User(object):
         Register user.
         Specify username, email, password and options properties.
 
+        Example::
+
+            user = necbaas.User(service)
+            user.username = "foo"
+            user.email = "foo@example.com"
+            user.password = "Passw0rD"
+            response = user.register()
+
         :return: Registration info (JSON)
         """
         body = {}
@@ -98,10 +132,11 @@ class User(object):
         return res
 
     @staticmethod
-    def query(self, username=None, email=None):
+    def query(service, username=None, email=None):
         """
         Query user.
 
+        :param Service service: Service
         :param username: Username
         :param email: E-mail
         :return: Response JSON in dictionary
@@ -112,6 +147,6 @@ class User(object):
         if email is not None:
             query["email"] = email
 
-        f = self.service.execute_rest("GET", "/users", query)
+        f = service.execute_rest("GET", "/users", query)
         res = json.loads(f.read())
         return res
