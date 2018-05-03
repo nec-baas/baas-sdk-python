@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import json as Json
+from requests import Response
 
 
 class Service(object):
@@ -32,7 +33,9 @@ class Service(object):
                 https: Https Proxy (host:port)
 
     """
+
     def __init__(self, param):
+        # (dict) -> None
         """
         Constructor.
         """
@@ -40,6 +43,7 @@ class Service(object):
         self.sessionToken = None
 
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None):
+        # (str, str, dict, any, dict, dict) -> Response
         """
         Call REST API
 
@@ -82,6 +86,7 @@ class Service(object):
         return self._do_request(method, **args)
 
     def _do_request(self, method, **kwargs):
+        # type: (str, **dict) -> Response
         method = method.upper()
         if method == 'GET':
             res = requests.get(**kwargs)
@@ -99,8 +104,8 @@ class Service(object):
             res.raise_for_status()
         return res
 
-
     def set_session_token(self, token):
+        # type: (str) -> None
         """
         Store session token in this service. The token is stored on memory only.
 

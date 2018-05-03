@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+from .service import Service
 
 
 class ObjectBucket(object):
@@ -10,10 +11,12 @@ class ObjectBucket(object):
     :param str bucket_name: Bucket name
     """
     def __init__(self, service, bucket_name):
+        # type: (Service, str) -> None
         self.service = service
         self.bucketName = bucket_name
 
     def query(self, where=None, order=None, skip=0, limit=None, projection=None):
+        # type: (dict, str, int, int, dict) -> dict
         """
         Query objects in this bucket
 
@@ -43,6 +46,7 @@ class ObjectBucket(object):
         return res  # TODO:
 
     def insert(self, data):
+        # type: (dict) -> dict
         """
         オブジェクトのINSERT
 
@@ -54,12 +58,13 @@ class ObjectBucket(object):
         return res
 
     def update(self, id, data, etag=None):
+        # type: (str, dict, str) -> dict
         """
         オブジェクト更新
 
-        :param id: ID
-        :param data: データ
-        :param etag: ETag
+        :param str id: ID
+        :param dict data: データ
+        :param str etag: ETag
         :return: 更新後のデータ
         """
         query_params = {}
@@ -71,6 +76,7 @@ class ObjectBucket(object):
         return res
 
     def remove(self, id):
+        # type: (str) -> dict
         """
         オブジェクト削除
 
@@ -82,10 +88,11 @@ class ObjectBucket(object):
         return res
 
     def remove_with_query(self, where=None):
+        # type: (dict) -> dict
         """
         オブジェクト一括削除
 
-        :param where: 検索条件
+        :param dict where: 検索条件
         :return:
         """
         if where is None:

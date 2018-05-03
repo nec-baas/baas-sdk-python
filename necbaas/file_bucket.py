@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
+from .service import Service
+from requests import Response
 
 
 class FileBucket(object):
@@ -10,10 +12,12 @@ class FileBucket(object):
     :param str bucket_name: Bucket name
     """
     def __init__(self, service, bucket_name):
+        # type: (Service, str) -> None
         self.service = service
         self.bucketName = bucket_name
 
     def query(self):
+        # type: () -> dict
         """
         Query file list.
 
@@ -24,16 +28,20 @@ class FileBucket(object):
         return res
 
     def upload(self, filename, data, content_type="application/octet-stream", acl=None):
+        # type: (str, Any, str, dict) -> dict
         """
         Upload file
 
         :praram str filename: Filename
         :param data: Data
+        :param str content_type: Content-Type
+        :param dict acl: ACL
         :return: Response JSON
         """
         return self._upload(filename, data, content_type, "POST", acl)
 
     def update(self, filename, data, content_type="application/octet-stream"):
+        # type: (str, Any, str) -> dict
         """
         Update file
 
@@ -45,6 +53,7 @@ class FileBucket(object):
         return self._upload(filename, data, content_type, "PUT", None)
 
     def _upload(self, filename, data, content_type, method, acl):
+        # type: (str, Any, str, str, dict) -> Response
         headers = {
             "Content-Type": content_type
         }
@@ -59,6 +68,7 @@ class FileBucket(object):
         return "/files/" + self.bucketName + "/" + filename
 
     def download(self, filename):
+        # type: (str) -> Response
         """
         Download file.
 
@@ -76,6 +86,7 @@ class FileBucket(object):
         return r
 
     def remove(self, filename):
+        # type: (str) -> dict
         """
         Delete file
 

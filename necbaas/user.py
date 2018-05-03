@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from .service import Service
 
 class User(object):
     """
@@ -20,6 +21,7 @@ class User(object):
     """
 
     def __init__(self, service):
+        # type: (Service) -> None
         self.service = service
         self.username = None
         self.email = None
@@ -28,6 +30,7 @@ class User(object):
 
     @staticmethod
     def login_with_username(service, username, password):
+        # type: (Service, str, str) -> dict
         """
         Login with user name
 
@@ -47,6 +50,7 @@ class User(object):
 
     @staticmethod
     def login_with_email(service, email, password):
+        # type: (Service, str, str) -> dict
         """
         Login with E-mail
 
@@ -66,6 +70,7 @@ class User(object):
 
     @staticmethod
     def login(service, param):
+        # type: (Service, dict) -> dict
         """
         Login
 
@@ -90,6 +95,7 @@ class User(object):
 
     @staticmethod
     def logout(service):
+        # type: (Service) -> dict
         """
         Logout
 
@@ -102,6 +108,7 @@ class User(object):
         return res
 
     def register(self):
+        # type: () -> dict
         """
         Register user.
         Specify username, email, password and options properties.
@@ -131,7 +138,8 @@ class User(object):
         return res
 
     @staticmethod
-    def query(service, username=None, email=None):
+    def query(service: Service, username=None, email=None):
+        # type: (Service, str, str) -> dict
         """
         Query user.
 
