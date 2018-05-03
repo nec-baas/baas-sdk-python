@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-try:
-    # for python 3
-    import urllib.request as urllib_request
-    import urllib.parse as urllib_parse
-except ImportError:
-    # for python 2
-    import urllib2 as urllib_request
-    import urllib as urllib_parse
+import requests
 
 
 class Service(object):
@@ -21,8 +14,8 @@ class Service(object):
             "appId": "0123456789abcdef",
             "appKey": "0123456789abcdef",
             "proxy": {
-                "type": "https",
-                "host": "proxy.example.com:8080"
+                "http": "proxy.example.com:8080",
+                "https": "proxy.example.com:8080"
             }
         })
 
@@ -34,8 +27,8 @@ class Service(object):
             appId: App ID (mandatory)
             appKey: App Key (or Master Key) (mandatory)
             proxy: (optional)
-                type: Proxy type ('http' or 'https')
-                host: Proxy host ('hostname:port')
+                http: Http Proxy (host:port)
+                https: Https Proxy (host:port)
 
     """
     def __init__(self, param):
@@ -54,14 +47,21 @@ class Service(object):
         :param dict query: Query parameters in dictionary.
         :param data: Request body, in bytes, file-like object or iterable.
         :param dict headers: headers
-        :return: file-like object
+        :return: Response
         """
-        url = self.param["baseUrl"] + "/1/" + self.param["tenantId"] + path
+        args = {}
+
+        args["url"] = self.param["baseUrl"] + "/1/" + self.param["tenantId"] + path
+
         if query is not None:
-            url += "?" + urllib_parse.urlencode(query)
+            args["params"] = query
+
+        if data is not None:
+            args["payload"] = data
 
         if headers is None:
             headers = {}
+        args["headers"] = headers
 
         headers["X-Application-Id"] = self.param["appId"]
         headers["X-Application-Key"] = self.param["appKey"]
@@ -72,19 +72,24 @@ class Service(object):
         if "Content-Type" not in headers and data is not None:
             headers["Content-Type"] = "application/json"
 
-        req = urllib_request.Request(url, data, headers)
-        req.get_method = lambda: method
-
         if "proxy" in self.param:
-            req.set_proxy(self.param["proxy"]["host"], self.param["proxy"]["type"])
+            args["proxies"] = self.param["proxy"]
 
-        try:
-            return self._urlopen(req)
-        except Exception as e:
-            raise e  # TODO:
+        return self._do_request(method, args)
 
-    def _urlopen(self, req):
-        return urllib_request.urlopen(req)
+    def _do_request(self, method, **kwargs):
+        method = method.upper()
+        if method == 'GET':
+            return requests.get(**kwargs)
+        elif method == 'POST':
+            return requests.post(**kwargs)
+        elif method == 'PUT':
+            return requests.put(**kwargs)
+        elif method == 'DELETE':
+            return requests.delete(**kwargs)
+        else:
+            raise Exception('Unsupported method: ' + method)
+
 
     def set_session_token(self, token):
         """

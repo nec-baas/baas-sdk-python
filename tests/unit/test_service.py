@@ -10,7 +10,7 @@ class ServiceTestCase(TestCase):
         self.assertEquals(service.param, {})
         self.assertEquals(service.sessionToken, None)
 
-    @patch("necbaas.Service._urlopen")
+    @patch("necbaas.Service._do_request")
     def test_execute_rest(self, mock):
         service = baas.Service({
             "baseUrl": "http://localhost/api",
@@ -19,9 +19,17 @@ class ServiceTestCase(TestCase):
             "appKey": "key1"
         })
 
+        service.set_session_token("token1")
+
         mock.return_value = {}
         ret = service.execute_rest("GET", "/a/b/c")
         self.assertEqual(ret, {})
 
-        req = mock.call_args[0][0]
-        self.assertEqual(req.full_url, "http://localhost/api/1/tenant1/a/b/c")
+        method = mock.call_args[0][0]
+        kwargs = mock.call_args[0][1]
+        self.assertEqual(method, "GET")
+        self.assertEqual(kwargs["url"], "http://localhost/api/1/tenant1/a/b/c")
+        headers = kwargs["headers"]
+        self.assertEqual(headers["X-Application-Id"], "app1")
+        self.assertEqual(headers["X-Application-Key"], "key1")
+        self.assertEqual(headers["X-Session-Token"], "token1")
