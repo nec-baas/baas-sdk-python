@@ -9,12 +9,12 @@ Python 2/3 両方に対応しています。
 インストール
 ----------
 
-    $ sudo python setup.py install
+    $ python setup.py install
 
 使用方法
 -------
 
-"import nebula" としてモジュールをインポートしてください。
+"import necbaas" としてモジュールをインポートしてください。
 
 使用方法は sample/sample.py を参照してください。
 
