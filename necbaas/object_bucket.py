@@ -37,8 +37,8 @@ class ObjectBucket(object):
         if projection is not None:
             query_params["projection"] = json.dumps(projection)
 
-        f = self.service.execute_rest("GET", "/objects/" + self.bucketName, query_params)
-        res = json.loads(f.read())
+        r = self.service.execute_rest("GET", "/objects/" + self.bucketName, query=query_params)
+        res = r.json()
 
         return res  # TODO:
 
@@ -49,8 +49,8 @@ class ObjectBucket(object):
         :param dict data: データ
         :return: 挿入後のデータ
         """
-        f = self.service.execute_rest("POST", "/objects/" + self.bucketName, None, json.dumps(data).encode("utf-8"))
-        res = json.loads(f.read())
+        r = self.service.execute_rest("POST", "/objects/" + self.bucketName, json=data)
+        res = r.json()
         return res
 
     def update(self, id, data, etag=None):
@@ -66,9 +66,8 @@ class ObjectBucket(object):
         if etag is not None:
             query_params["etag"] = etag
 
-        f = self.service.execute_rest("PUT", "/objects/" + self.bucketName + "/" + id,
-                                      query_params, json.dumps(data).encode("utf-8"))
-        res = json.loads(f.read())
+        r = self.service.execute_rest("PUT", "/objects/" + self.bucketName + "/" + id, query=query_params, json=data)
+        res = r.json()
         return res
 
     def remove(self, id):
@@ -78,8 +77,8 @@ class ObjectBucket(object):
         :param str id: ID
         :return:
         """
-        f = self.service.execute_rest("DELETE", "/objects/" + self.bucketName + "/" + id, {"deleteMark": 1})
-        res = json.loads(f.read())
+        r = self.service.execute_rest("DELETE", "/objects/" + self.bucketName + "/" + id, query={"deleteMark": 1})
+        res = r.json()
         return res
 
     def remove_with_query(self, where=None):
@@ -97,6 +96,6 @@ class ObjectBucket(object):
             "deleteMark": 1
         }
         
-        f = self.service.execute_rest("DELETE", "/objects/" + self.bucketName, query_params)
-        res = json.loads(f.read())
+        r = self.service.execute_rest("DELETE", "/objects/" + self.bucketName, query=query_params)
+        res = r.json()
         return res

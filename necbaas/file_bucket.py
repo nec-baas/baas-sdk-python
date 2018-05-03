@@ -19,8 +19,8 @@ class FileBucket(object):
 
         :return: Response JSON
         """
-        f = self.service.execute_rest("GET", "/files/" + self.bucketName)
-        res = json.loads(f.read())
+        r = self.service.execute_rest("GET", "/files/" + self.bucketName)
+        res = r.json()
         return res
 
     def upload(self, filename, data, content_type="application/octet-stream", acl=None):
@@ -51,8 +51,8 @@ class FileBucket(object):
         if acl is not None:
             headers["X-ACL"] = json.dumps(acl)
 
-        f = self.service.execute_rest(method, self._get_file_path(filename), None, data, headers)
-        res = json.loads(f.read())
+        r = self.service.execute_rest(method, self._get_file_path(filename), data=data, headers=headers)
+        res = r.json()
         return res
 
     def _get_file_path(self, filename):
@@ -60,13 +60,20 @@ class FileBucket(object):
 
     def download(self, filename):
         """
-        Download file
+        Download file.
+
+        Examples::
+
+            r = bucket.download("file1")
+            binary = r.content # binary content
+            text = r.text      # text content
+            json = r.json()    # json content
 
         :param filename: Filename
-        :return: file like object
+        :return: response (requests library)
         """
-        f = self.service.execute_rest("GET", self._get_file_path(filename))
-        return f
+        r = self.service.execute_rest("GET", self._get_file_path(filename))
+        return r
 
     def remove(self, filename):
         """
@@ -75,6 +82,6 @@ class FileBucket(object):
         :param str filename: Filename
         :return:
         """
-        f = self.service.execute_rest("DELETE", self._get_file_path(filename))
-        res = json.loads(f.read())
+        r = self.service.execute_rest("DELETE", self._get_file_path(filename))
+        res = r.json()
         return res

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 
 
 class User(object):
@@ -82,8 +81,8 @@ class User(object):
             Usually contains username or email, and password.
         :return: Response JSON in dictionary
         """
-        f = service.execute_rest("POST", "/login", None, json.dumps(param).encode("utf-8"))
-        res = json.loads(f.read())
+        r = service.execute_rest("POST", "/login", json=param)
+        res = r.json()
 
         session_token = res["sessionToken"]
         service.set_session_token(session_token)
@@ -97,8 +96,8 @@ class User(object):
         :param service: Service
         :return: Response JSON in dictionary
         """
-        f = service.execute_rest("DELETE", "/login")
-        res = json.loads(f.read())
+        r = service.execute_rest("DELETE", "/login")
+        res = r.json()
         service.set_session_token(None)
         return res
 
@@ -127,8 +126,8 @@ class User(object):
         if self.options is not None:
             body["options"] = self.options
 
-        f = self.service.execute_rest("POST", "/users", None, body)
-        res = json.loads(f.read())
+        r = self.service.execute_rest("POST", "/users", data=body)
+        res = r.json()
         return res
 
     @staticmethod
@@ -147,6 +146,6 @@ class User(object):
         if email is not None:
             query["email"] = email
 
-        f = service.execute_rest("GET", "/users", query)
-        res = json.loads(f.read())
+        r = service.execute_rest("GET", "/users", query=query)
+        res = r.json()
         return res

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
+import json as Json
 
 
 class Service(object):
@@ -38,7 +39,7 @@ class Service(object):
         self.param = param
         self.sessionToken = None
 
-    def execute_rest(self, method, path, query=None, data=None, headers=None):
+    def execute_rest(self, method, path, query=None, data=None, json=None, headers=None):
         """
         Call REST API
 
@@ -46,6 +47,7 @@ class Service(object):
         :param str path: Path. The part after '/1/{tenantId}' of full path. Must be started with '/'.
         :param dict query: Query parameters in dictionary.
         :param data: Request body, in bytes, file-like object or iterable.
+        :param dict json: Request JSON in dictionary.
         :param dict headers: headers
         :return: Response
         """
@@ -56,8 +58,10 @@ class Service(object):
         if query is not None:
             args["params"] = query
 
+        if json is not None:
+            data = Json.dumps(json).encode("utf-8")  # Override data
         if data is not None:
-            args["payload"] = data
+            args["data"] = data
 
         if headers is None:
             headers = {}
@@ -75,20 +79,25 @@ class Service(object):
         if "proxy" in self.param:
             args["proxies"] = self.param["proxy"]
 
-        return self._do_request(method, args)
+        return self._do_request(method, **args)
 
     def _do_request(self, method, **kwargs):
         method = method.upper()
         if method == 'GET':
-            return requests.get(**kwargs)
+            res = requests.get(**kwargs)
         elif method == 'POST':
-            return requests.post(**kwargs)
+            res = requests.post(**kwargs)
         elif method == 'PUT':
-            return requests.put(**kwargs)
+            res = requests.put(**kwargs)
         elif method == 'DELETE':
-            return requests.delete(**kwargs)
+            res = requests.delete(**kwargs)
         else:
             raise Exception('Unsupported method: ' + method)
+
+        status = res.status_code
+        if status >= 400:
+            res.raise_for_status()
+        return res
 
 
     def set_session_token(self, token):
