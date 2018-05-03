@@ -43,7 +43,7 @@ class Service(object):
         self.sessionToken = None
 
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None):
-        # (str, str, dict, any, dict, dict) -> Response
+        # (str, str, dict, Any, dict, dict) -> Response
         """
         Call REST API
 
@@ -55,18 +55,15 @@ class Service(object):
         :param dict headers: headers
         :return: Response
         """
-        args = {}
+        args = {
+            "url": self.param["baseUrl"] + "/1/" + self.param["tenantId"] + path
+        }
 
-        args["url"] = self.param["baseUrl"] + "/1/" + self.param["tenantId"] + path
-
+        # query parameters
         if query is not None:
             args["params"] = query
 
-        if json is not None:
-            data = Json.dumps(json).encode("utf-8")  # Override data
-        if data is not None:
-            args["data"] = data
-
+        # headers
         if headers is None:
             headers = {}
         args["headers"] = headers
@@ -77,15 +74,25 @@ class Service(object):
         if self.sessionToken is not None:
             headers["X-Session-Token"] = self.sessionToken
 
-        if "Content-Type" not in headers and data is not None:
-            headers["Content-Type"] = "application/json"
+        # set data and decide content-type
+        content_type = None
+        if json is not None:
+            args["data"] = Json.dumps(json).encode("utf-8")  # Override data
+            content_type = "application/json"
+        if data is not None:
+            args["data"] = data
+            content_type = "application/octet-stream"
+
+        if "Content-Type" not in headers and content_type is not None:
+            headers["Content-Type"] = content_type
 
         if "proxy" in self.param:
             args["proxies"] = self.param["proxy"]
 
         return self._do_request(method, **args)
 
-    def _do_request(self, method, **kwargs):
+    @staticmethod
+    def _do_request(method, **kwargs):
         # type: (str, **dict) -> Response
         method = method.upper()
         if method == 'GET':
