@@ -26,7 +26,7 @@ class ServiceTestCase(TestCase):
         self.assertEqual(ret, {})
 
         method = mock.call_args[0][0]
-        kwargs = mock.call_args[0][1]
+        kwargs = mock.call_args[1]
         self.assertEqual(method, "GET")
         self.assertEqual(kwargs["url"], "http://localhost/api/1/tenant1/a/b/c")
         headers = kwargs["headers"]
