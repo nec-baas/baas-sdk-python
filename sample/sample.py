@@ -50,7 +50,7 @@ res = fileBucket.query()
 print(res)
 
 res = fileBucket.download("test.txt")
-print(res.read())
+print(res.text)
 
 res = fileBucket.remove("test.txt")
 print(res)
