@@ -8,7 +8,8 @@ requires = [
 ]
 
 test_requires = [
-    'nose'
+    'nose',
+    'mock'
 ]
 
 doc_requires = [
