@@ -138,7 +138,7 @@ class User(object):
         return res
 
     @staticmethod
-    def query(service: Service, username=None, email=None):
+    def query(service, username=None, email=None):
         # type: (Service, str, str) -> dict
         """
         Query user.
