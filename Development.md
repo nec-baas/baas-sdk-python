@@ -4,13 +4,18 @@
 テスト手順
 --------
 
-テストには nose が必要です
+テストには nose が必要です。また Python 複数バージョンテストの実施のため
+tox も必要です。
 
-    $ pip install nose
+    $ pip install nose tox
 
 単体テストは以下手順で実施してください
 
     $ nosetests
+
+Python 複数バージョン一括テストをする場合は tox を使用してください。
+
+    $ tox    
 
 ドキュメント生成
 -------------
