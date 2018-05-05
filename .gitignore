@@ -3,8 +3,12 @@
 *.pyc
 
 MANIFEST
+Pipfile.lock
 dist/
 build/
+.venv/
+.tox/
+*.egg-info/
 
 .idea/
 *.iml
