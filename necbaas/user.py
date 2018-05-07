@@ -2,6 +2,7 @@
 
 from .service import Service
 
+
 class User(object):
     """
     User

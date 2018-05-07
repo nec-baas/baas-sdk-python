@@ -10,10 +10,19 @@ class ObjectBucket(object):
     :param Service service: Service
     :param str bucket_name: Bucket name
     """
+
+    service = None
+    # type: Service
+    """Service instance"""
+
+    bucket_name = None
+    # type: str
+    """Bucket name"""
+
     def __init__(self, service, bucket_name):
         # type: (Service, str) -> None
         self.service = service
-        self.bucketName = bucket_name
+        self.bucket_name = bucket_name
 
     def query(self, where=None, order=None, skip=0, limit=None, projection=None):
         # type: (dict, str, int, int, dict) -> dict
@@ -40,7 +49,7 @@ class ObjectBucket(object):
         if projection is not None:
             query_params["projection"] = json.dumps(projection)
 
-        r = self.service.execute_rest("GET", "/objects/" + self.bucketName, query=query_params)
+        r = self.service.execute_rest("GET", "/objects/" + self.bucket_name, query=query_params)
         res = r.json()
 
         return res  # TODO:
@@ -48,51 +57,51 @@ class ObjectBucket(object):
     def insert(self, data):
         # type: (dict) -> dict
         """
-        オブジェクトのINSERT
+        Insert JSON Object
 
-        :param dict data: データ
-        :return: 挿入後のデータ
+        :param dict data: Data (JSON)
+        :return: Inserted data
         """
-        r = self.service.execute_rest("POST", "/objects/" + self.bucketName, json=data)
+        r = self.service.execute_rest("POST", "/objects/" + self.bucket_name, json=data)
         res = r.json()
         return res
 
     def update(self, id, data, etag=None):
         # type: (str, dict, str) -> dict
         """
-        オブジェクト更新
+        Update JSON Object
 
-        :param str id: ID
-        :param dict data: データ
+        :param str id: ID of Object
+        :param dict data: Data (JSON)
         :param str etag: ETag
-        :return: 更新後のデータ
+        :return: Updated data
         """
         query_params = {}
         if etag is not None:
             query_params["etag"] = etag
 
-        r = self.service.execute_rest("PUT", "/objects/" + self.bucketName + "/" + id, query=query_params, json=data)
+        r = self.service.execute_rest("PUT", "/objects/" + self.bucket_name + "/" + id, query=query_params, json=data)
         res = r.json()
         return res
 
     def remove(self, id):
         # type: (str) -> dict
         """
-        オブジェクト削除
+        Remove one JSON Object
 
         :param str id: ID
         :return:
         """
-        r = self.service.execute_rest("DELETE", "/objects/" + self.bucketName + "/" + id, query={"deleteMark": 1})
+        r = self.service.execute_rest("DELETE", "/objects/" + self.bucket_name + "/" + id, query={"deleteMark": 1})
         res = r.json()
         return res
 
     def remove_with_query(self, where=None):
         # type: (dict) -> dict
         """
-        オブジェクト一括削除
+        Remove multiple JSON Objects
 
-        :param dict where: 検索条件
+        :param dict where: Query condition
         :return:
         """
         if where is None:
@@ -103,6 +112,6 @@ class ObjectBucket(object):
             "deleteMark": 1
         }
         
-        r = self.service.execute_rest("DELETE", "/objects/" + self.bucketName, query=query_params)
+        r = self.service.execute_rest("DELETE", "/objects/" + self.bucket_name, query=query_params)
         res = r.json()
         return res
