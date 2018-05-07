@@ -34,13 +34,24 @@ class Service(object):
 
     """
 
+    param = None
+    # type: dict
+    """Service parameters"""
+
+    session_token = None
+    # type: str
+    """Session Token"""
+
+    verify_server_cert = True
+    """Verify server cert (default: True)"""
+
     def __init__(self, param):
         # (dict) -> None
         """
         Constructor.
         """
         self.param = param
-        self.sessionToken = None
+        self.session_token = None
 
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None):
         # (str, str, dict, Any, dict, dict) -> Response
@@ -71,8 +82,8 @@ class Service(object):
         headers["X-Application-Id"] = self.param["appId"]
         headers["X-Application-Key"] = self.param["appKey"]
 
-        if self.sessionToken is not None:
-            headers["X-Session-Token"] = self.sessionToken
+        if self.session_token is not None:
+            headers["X-Session-Token"] = self.session_token
 
         # set data and decide content-type
         content_type = None
@@ -88,6 +99,9 @@ class Service(object):
 
         if "proxy" in self.param:
             args["proxies"] = self.param["proxy"]
+
+        if not self.verify_server_cert:
+            args["verify"] = False
 
         return self._do_request(method, **args)
 
@@ -119,4 +133,4 @@ class Service(object):
         :param str token: Session Token
         :return:
         """
-        self.sessionToken = token
+        self.session_token = token

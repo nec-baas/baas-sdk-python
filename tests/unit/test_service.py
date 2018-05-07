@@ -8,7 +8,7 @@ class ServiceTestCase(TestCase):
     def test_init(self):
         service = baas.Service({})
         self.assertEquals(service.param, {})
-        self.assertEquals(service.sessionToken, None)
+        self.assertEquals(service.session_token, None)
 
     @patch("necbaas.Service._do_request")
     def test_execute_rest(self, mock):
