@@ -12,6 +12,7 @@ mock = ">=2.0.0"
 tox = ">=3.0.0"
 sphinx = ">=1.7.4"
 sphinx-rtd-theme = ">=0.3.1"
+pyyaml = "*"
 
 [requires]
 python_version = "3.6"
