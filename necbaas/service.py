@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import json as Json
+import logging
 from requests import Response
 
 
@@ -43,7 +44,16 @@ class Service(object):
     """Session Token"""
 
     verify_server_cert = True
+    # type: bool
     """Verify server cert (default: True)"""
+
+    verbose = False
+    # type: bool
+    """Output verbose log of REST API call"""
+
+    logger = None
+    # type: logging.Logger
+    """Logger"""
 
     def __init__(self, param):
         # (dict) -> None
@@ -52,6 +62,8 @@ class Service(object):
         """
         self.param = param
         self.session_token = None
+        self.logger = logging.getLogger("necbaas")
+        self.logger.setLevel(logging.NOTSET)
 
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None):
         # (str, str, dict, Any, dict, dict) -> Response
@@ -105,8 +117,8 @@ class Service(object):
 
         return self._do_request(method, **args)
 
-    @staticmethod
-    def _do_request(method, **kwargs):
+    def _do_request(self, method, **kwargs):
+        self.logger.log(logging.INFO, "HTTP request: method=%s, url=%s", method, kwargs["url"])
         # type: (str, **dict) -> Response
         method = method.upper()
         if method == 'GET':
@@ -122,6 +134,7 @@ class Service(object):
 
         status = res.status_code
         if status >= 400:
+            self.logger.log(logging.WARNING, "HTTP request error: status=%d", status)
             res.raise_for_status()
         return res
 
