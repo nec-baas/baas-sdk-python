@@ -118,7 +118,7 @@ class Service(object):
         return self._do_request(method, **args)
 
     def _do_request(self, method, **kwargs):
-        self.logger.log(logging.INFO, "HTTP request: method=%s, url=%s", method, kwargs["url"])
+        self.logger.debug("HTTP request: method=%s, url=%s", method, kwargs["url"])
         # type: (str, **dict) -> Response
         method = method.upper()
         if method == 'GET':
@@ -134,16 +134,8 @@ class Service(object):
 
         status = res.status_code
         if status >= 400:
-            self.logger.log(logging.WARNING, "HTTP request error: status=%d", status)
+            self.logger.warning("HTTP request error: status=%d", status)
             res.raise_for_status()
+        else:
+            self.logger.debug("HTTP response: status=%d", status)
         return res
-
-    def set_session_token(self, token):
-        # type: (str) -> None
-        """
-        Store session token in this service. The token is stored on memory only.
-
-        :param str token: Session Token
-        :return:
-        """
-        self.session_token = token

@@ -19,7 +19,7 @@ class ServiceTestCase(TestCase):
             "appKey": "key1"
         })
 
-        service.set_session_token("token1")
+        service.session_token = "token1"
 
         mock.return_value = {}
         ret = service.execute_rest("GET", "/a/b/c")
