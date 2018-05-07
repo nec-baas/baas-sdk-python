@@ -16,3 +16,7 @@ pyyaml = "*"
 
 [requires]
 python_version = "3.6"
+
+[scripts]
+ut = "nosetests tests/unit"
+ft = "nosetests tests/func"
