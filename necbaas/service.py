@@ -60,6 +60,22 @@ class Service(object):
         """
         Constructor.
         """
+        # verify params
+        if "baseUrl" not in param:
+            raise Exception("No baseUrl")
+        if "tenantId" not in param:
+            raise Exception("No tenantId")
+        if "appId" not in param:
+            raise Exception("No appId")
+        if "appKey" not in param:
+            raise Exception("No appKey")
+
+        # normalise baseUrl
+        base_url = str(param["baseUrl"])
+        if base_url.endswith("/"):
+            base_url = base_url[0:-1]
+            param["baseUrl"] = base_url
+
         self.param = param
         self.session_token = None
         self.logger = logging.getLogger("necbaas")
@@ -71,13 +87,16 @@ class Service(object):
         Call REST API
 
         :param str method: HTTP method name
-        :param str path: Path. The part after '/1/{tenantId}' of full path. Must be started with '/'.
+        :param str path: Path. The part after '/1/{tenantId}' of full path.
         :param dict query: Query parameters in dictionary.
         :param data: Request body, in bytes, file-like object or iterable.
         :param dict json: Request JSON in dictionary.
         :param dict headers: headers
         :return: Response
         """
+        if not path.startswith("/"):
+            path = "/" + path
+
         args = {
             "url": self.param["baseUrl"] + "/1/" + self.param["tenantId"] + path
         }

@@ -6,8 +6,15 @@ import necbaas as baas
 
 class ServiceTestCase(TestCase):
     def test_init(self):
-        service = baas.Service({})
-        self.assertEquals(service.param, {})
+        param = {
+            "baseUrl": "http://localhost/api/",
+            "tenantId": "tenant1",
+            "appId": "app1",
+            "appKey": "key1"
+        }
+        service = baas.Service(param)
+        self.assertEquals(service.param, param)
+        self.assertEquals(service.param["baseUrl"], "http://localhost/api")
         self.assertEquals(service.session_token, None)
 
     @patch("necbaas.Service._do_request")
@@ -22,7 +29,7 @@ class ServiceTestCase(TestCase):
         service.session_token = "token1"
 
         mock.return_value = {}
-        ret = service.execute_rest("GET", "/a/b/c")
+        ret = service.execute_rest("GET", "a/b/c")
         self.assertEqual(ret, {})
 
         method = mock.call_args[0][0]
