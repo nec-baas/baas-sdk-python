@@ -33,10 +33,11 @@ class FileBucket(object):
         """
         Upload file
 
-        Example::
+        Example:
+            ::
 
-            with open("/data/data1.dat", "rb") as f:
-                bucket.upload("data1.dat", f, acl={"r": "g:anonymous"})
+                with open("/data/data1.dat", "rb") as f:
+                    bucket.upload("data1.dat", f, acl={"r": "g:anonymous"})
 
         :param str filename: Filename
         :param data: Data
@@ -82,18 +83,21 @@ class FileBucket(object):
         """
         Download file.
 
-        Example1 (no streaming)::
+        Example:
 
-            r = bucket.download("file1.json")
-            binary = r.content   # get binary content
-            #text = r.text       # get text content
-            #json = r.json()     # get json content
+            Example 1 without streaming::
 
-        Example2 (streaming)::
+                r = bucket.download("file1.json")
+                binary = r.content   # get binary content
+                #text = r.text       # get text content
+                #json = r.json()     # get json content
 
-            with bucket.download("file2.zip", stream=True) as r:
-                # Do things with the response here
-                # for more info, see http://docs.python-requests.org/en/master/user/advanced/#streaming-requests
+            Example2 with streaming::
+
+                with bucket.download("file2.zip", stream=True) as r:
+                    # Do things with the response here
+
+            For details of streaming support, see http://docs.python-requests.org/en/master/user/advanced/#streaming-requests.
 
         :param str filename: Filename
         :param bool stream: Stream flag

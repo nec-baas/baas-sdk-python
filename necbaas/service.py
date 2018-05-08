@@ -9,21 +9,22 @@ class Service(object):
     """
     BaaS access service class.
 
-    Example::
+    Example:
+        ::
 
-        service = necbaas.Service({
-            "baseUrl": "https://api.example.com/api",
-            "tenantId": "tenant1",
-            "appId": "0123456789abcdef",
-            "appKey": "0123456789abcdef",
-            "proxy": {
-                "http": "proxy.example.com:8080",
-                "https": "proxy.example.com:8080"
-            }
-        })
+            service = necbaas.Service({
+                "baseUrl": "https://api.example.com/api",
+                "tenantId": "tenant1",
+                "appId": "0123456789abcdef",
+                "appKey": "0123456789abcdef",
+                "proxy": {
+                    "http": "proxy.example.com:8080",
+                    "https": "proxy.example.com:8080"
+                }
+            })
 
     :param dict param:
-        Parameters, must have following format::
+        Parameters, must have following dict format::
 
             baseUrl: Base URL of BaaS API Server (ex: https://api.example.com/api) (mandatory)
             tenantId: Tenant ID or Tenant Name (mandatory)
@@ -81,7 +82,9 @@ class Service(object):
         # (str, str, dict, Any, dict, dict) -> Response
         """
         Call REST API.
-        This is low level and internal method, so you should not use this.
+
+        Note:
+            This is low level and internal method, so you should not use this.
 
         :param str method: HTTP method name
         :param str path: Path. The part after '/1/{tenantId}' of full path.

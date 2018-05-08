@@ -11,8 +11,10 @@ class Apigw(object):
     API Gateway instance.
     Create this instance for each API (apiname, method and subpath)
 
-    Example::
-        api = necbaas.Apigw(service, "api1", "GET", "a/b/c")
+    Example:
+        ::
+
+            api = necbaas.Apigw(service, "api1", "GET", "a/b/c")
 
     :param Service service: Service
     :param str apiname: API name
@@ -37,10 +39,12 @@ class Apigw(object):
         Execute API Gateway.
         Return value is 'Response' object of 'requests' library.
 
-        Example::
-            res = api.execute(json={"sensor1": 45.2}, headers={"Content-Type": "application/json"}})
-            status = res.status()  # get status code
-            json = res.json()  # response body of JSON as dict
+        Example:
+            ::
+
+                res = api.execute(json={"sensor1": 45.2}, headers={"Content-Type": "application/json"}})
+                status = res.status()  # get status code
+                json = res.json()  # response body of JSON as dict
 
         :param any data: Request body (optional)
         :param dict json: Request body of JSON (optional)

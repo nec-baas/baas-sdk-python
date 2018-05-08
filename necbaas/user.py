@@ -35,9 +35,10 @@ class User(object):
         """
         Login with user name
 
-        Example::
+        Example:
+            ::
 
-            result = necbaas.User.login_with_username(service, "foo", "Passw0rD")
+                result = necbaas.User.login_with_username(service, "foo", "Passw0rD")
 
         :param service: Service
         :param str username: User name
@@ -55,9 +56,10 @@ class User(object):
         """
         Login with E-mail
 
-        Example::
+        Example:
+            ::
 
-            result = necbaas.User.login_with_email(service, "foo@example.com", "Passw0rD")
+                result = necbaas.User.login_with_email(service, "foo@example.com", "Passw0rD")
 
         :param service: Service
         :param str email: User name
@@ -75,12 +77,13 @@ class User(object):
         """
         Login
 
-        Example::
+        Example:
+            ::
 
-            result = necbaas.User.login(service, {
-                "username": "foo",
-                "password": "Passw0rD"
-            })
+                result = necbaas.User.login(service, {
+                    "username": "foo",
+                    "password": "Passw0rD"
+                })
 
         :param service: Service
         :param dict param: dictionary. The parameter is encoded in JSON and sent to server.
@@ -114,13 +117,14 @@ class User(object):
         Register user.
         Specify username, email, password and options properties.
 
-        Example::
+        Example:
+            ::
 
-            user = necbaas.User(service)
-            user.username = "foo"
-            user.email = "foo@example.com"
-            user.password = "Passw0rD"
-            response = user.register()
+                user = necbaas.User(service)
+                user.username = "foo"
+                user.email = "foo@example.com"
+                user.password = "Passw0rD"
+                response = user.register()
 
         :return: Registration info (JSON)
         """
