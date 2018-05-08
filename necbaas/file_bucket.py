@@ -53,7 +53,7 @@ class FileBucket(object):
         """
         Update file
 
-        :param str filename: ファイル名
+        :param str filename: File name
         :param data: Data
         :param str content_type: Content-Type
         :return: Response JSON

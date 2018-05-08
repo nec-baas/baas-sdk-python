@@ -37,7 +37,7 @@ class Service(object):
 
     param = None
     # type: dict
-    """Service parameters"""
+    """Service parameters, passed by constructor argument."""
 
     session_token = None
     # type: str
@@ -47,13 +47,9 @@ class Service(object):
     # type: bool
     """Verify server cert (default: True)"""
 
-    verbose = False
-    # type: bool
-    """Output verbose log of REST API call"""
-
     logger = None
     # type: logging.Logger
-    """Logger"""
+    """Logger. You can change log level with setLevel()"""
 
     def __init__(self, param):
         # (dict) -> None
@@ -84,7 +80,8 @@ class Service(object):
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None, stream=False):
         # (str, str, dict, Any, dict, dict) -> Response
         """
-        Call REST API
+        Call REST API.
+        This is low level and internal method, so you should not use this.
 
         :param str method: HTTP method name
         :param str path: Path. The part after '/1/{tenantId}' of full path.
