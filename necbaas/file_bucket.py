@@ -8,8 +8,9 @@ class FileBucket(object):
     """
     File Bucket
 
-    :param Service service: Service
-    :param str bucket_name: Bucket name
+    Args:
+        service (Service): Service
+        bucket_name (str): Bucket name
     """
 
     def __init__(self, service, bucket_name):
@@ -22,7 +23,8 @@ class FileBucket(object):
         """
         Query file list.
 
-        :return: Response JSON
+        Returns:
+            dict: Response JSON
         """
         r = self.service.execute_rest("GET", "/files/" + self.bucketName)
         res = r.json()
@@ -39,11 +41,14 @@ class FileBucket(object):
                 with open("/data/data1.dat", "rb") as f:
                     bucket.upload("data1.dat", f, acl={"r": "g:anonymous"})
 
-        :param str filename: Filename
-        :param data: Data
-        :param str content_type: Content-Type (default=application/octet-stream)
-        :param dict acl: ACL (default=None)
-        :return: Response JSON
+        Args:
+            filename (str): Filename
+            data (any): Data
+            content_type (str): Content-Type (default=application/octet-stream)
+            acl (dict): ACL (default=None)
+
+        Returns:
+            dict: Response JSON
         """
         r = self._upload(filename, data, content_type, "POST", acl=acl)
         res = r.json()
@@ -54,10 +59,13 @@ class FileBucket(object):
         """
         Update file
 
-        :param str filename: File name
-        :param data: Data
-        :param str content_type: Content-Type
-        :return: Response JSON
+        Args:
+            filename (str): File name
+            data (any): Data
+            content_type (str): Content-Type
+
+        Returns:
+            dict: Response JSON
         """
         r = self._upload(filename, data, content_type, "PUT")
         res = r.json()
@@ -99,9 +107,12 @@ class FileBucket(object):
 
             For details of streaming support, see http://docs.python-requests.org/en/master/user/advanced/#streaming-requests.
 
-        :param str filename: Filename
-        :param bool stream: Stream flag
-        :return: Response (requests library)
+        Args:
+            filename (str): Filename
+            stream (bool): Stream flag
+
+        Returns:
+            Response: Response (requests library)
         """
         r = self.service.execute_rest("GET", self._get_file_path(filename), stream=stream)
         return r
@@ -111,8 +122,11 @@ class FileBucket(object):
         """
         Delete file
 
-        :param str filename: Filename
-        :return: Response JSON
+        Args:
+            filename (str): Filename
+
+        Returns:
+            dict: Response JSON
         """
         r = self.service.execute_rest("DELETE", self._get_file_path(filename))
         res = r.json()

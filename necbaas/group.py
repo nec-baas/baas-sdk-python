@@ -6,8 +6,9 @@ class Group(object):
     """
     Group
 
-    :param Service service: Service
-    :param str name: Group name
+    Args:
+        service (Service): Service
+        name (str): Group name
     """
     def __init__(self, service, name):
         # type: (Service, str) -> None

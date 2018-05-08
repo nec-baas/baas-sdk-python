@@ -16,10 +16,11 @@ class Apigw(object):
 
             api = necbaas.Apigw(service, "api1", "GET", "a/b/c")
 
-    :param Service service: Service
-    :param str apiname: API name
-    :param str method: method (GET/POST/PUT/DELETE)
-    :param str subpath: subpath (optional)
+    Args:
+        service (Service): Service
+        apiname (str): API name
+        method (str): Method (GET/POST/PUT/DELETE)
+        subpath (str): Sub-path (optional)
     """
 
     service = None
@@ -46,11 +47,14 @@ class Apigw(object):
                 status = res.status()  # get status code
                 json = res.json()  # response body of JSON as dict
 
-        :param any data: Request body (optional)
-        :param dict json: Request body of JSON (optional)
-        :param dict query: Query parameters (optional)
-        :param dict headers: Headers (optional)
-        :return: Response of 'requests' library.
+        Args:
+            data (any): Request body (optional)
+            json (dict): Request body of JSON (optional)
+            query (dict): Query parameters (optional)
+            headers (dict): Headers (optional)
+
+        Returns:
+            Response: Response of 'requests' library.
         """
         path = self.apiname
         if self.subpath is not None:

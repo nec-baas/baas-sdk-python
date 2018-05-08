@@ -23,8 +23,8 @@ class Service(object):
                 }
             })
 
-    :param dict param:
-        Parameters, must have following dict format::
+    Args:
+        param (dict): Parameters, must have following dict format::
 
             baseUrl: Base URL of BaaS API Server (ex: https://api.example.com/api) (mandatory)
             tenantId: Tenant ID or Tenant Name (mandatory)
@@ -86,14 +86,17 @@ class Service(object):
         Note:
             This is low level and internal method, so you should not use this.
 
-        :param str method: HTTP method name
-        :param str path: Path. The part after '/1/{tenantId}' of full path.
-        :param dict query: Query parameters in dictionary.
-        :param data: Request body, in bytes, file-like object or iterable.
-        :param dict json: Request JSON in dictionary.
-        :param dict headers: headers
-        :param bool stream: Stream flag
-        :return: Response
+        Args:
+            method (str): HTTP method name
+            path (str): Path. The part after '/1/{tenantId}' of full path.
+            query (dict): Query parameters in dictionary.
+            data (data): Request body, in bytes, file-like object, stream or iterable.
+            json (dict): Request JSON in dictionary.
+            headers (dict): headers
+            stream (bool): Stream flag
+
+        Returns:
+            Response: Response
         """
         if not path.startswith("/"):
             path = "/" + path

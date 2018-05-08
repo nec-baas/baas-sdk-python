@@ -7,18 +7,13 @@ class User(object):
     """
     User
 
-    :param Service service: Service
+        service (Service): Service
 
-    Attributes
-    ----------
-    username : str
-        Username
-    email : str
-        E-mail address
-    password : str
-        Password
-    options : dict
-        Options
+    Attributes:
+        username (str): Username
+        email (str): E-mail address
+        password (str): Password
+        options (dict): Options
     """
 
     def __init__(self, service):
@@ -40,10 +35,12 @@ class User(object):
 
                 result = necbaas.User.login_with_username(service, "foo", "Passw0rD")
 
-        :param service: Service
-        :param str username: User name
-        :param str password: Password
-        :return: Response JSON in dictionary
+        Args:
+            service (Service): Service
+            username (str): User name
+            password (str): Password
+        Returns:
+            dict: Response JSON in dictionary
         """
         return User.login(service, {
             "username": username,
@@ -61,10 +58,12 @@ class User(object):
 
                 result = necbaas.User.login_with_email(service, "foo@example.com", "Passw0rD")
 
-        :param service: Service
-        :param str email: User name
-        :param str password: Password
-        :return: Response JSON in dictionary
+        Args:
+            service (Service): Service
+            email (str): User name
+            password (str): Password
+        Returns:
+            dict: Response JSON
         """
         return User.login(service, {
             "email": email,
@@ -85,10 +84,13 @@ class User(object):
                     "password": "Passw0rD"
                 })
 
-        :param service: Service
-        :param dict param: dictionary. The parameter is encoded in JSON and sent to server.
-            Usually contains username or email, and password.
-        :return: Response JSON in dictionary
+        Args:
+            service (Service): Service
+            param (dict): dictionary. The parameter is encoded in JSON and sent to server.
+                Usually contains username or email, and password.
+
+        Returns:
+            dict: Response JSON
         """
         r = service.execute_rest("POST", "/login", json=param)
         res = r.json()
@@ -103,8 +105,10 @@ class User(object):
         """
         Logout
 
-        :param service: Service
-        :return: Response JSON in dictionary
+        Args:
+            service (Service): Service
+        Returns:
+            dict: Response JSON in dictionary
         """
         r = service.execute_rest("DELETE", "/login")
         res = r.json()
@@ -126,7 +130,8 @@ class User(object):
                 user.password = "Passw0rD"
                 response = user.register()
 
-        :return: Registration info (JSON)
+        Returns:
+            dist: Registration info (JSON)
         """
         body = {}
         if self.username is not None:
@@ -148,10 +153,12 @@ class User(object):
         """
         Query user.
 
-        :param Service service: Service
-        :param username: Username
-        :param email: E-mail
-        :return: Response JSON in dictionary
+        Args:
+            service (Service): Service
+            username (str): Username (optional)
+            email (str): E-mail (optional)
+        Returns:
+            dict: Response JSON
         """
         query = {}
         if username is not None:

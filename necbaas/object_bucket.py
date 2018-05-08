@@ -7,8 +7,8 @@ class ObjectBucket(object):
     """
     JSON Object Storage Bucket.
 
-    :param Service service: Service
-    :param str bucket_name: Bucket name
+        service (Service): Service
+        bucket_name (str): Bucket name
     """
 
     service = None
@@ -29,12 +29,15 @@ class ObjectBucket(object):
         """
         Query objects in this bucket
 
-        :param dict where: Query conditions (JSON)
-        :param str order: Sort conditions
-        :param int skip: Skip count
-        :param int limit: Limit count
-        :param dict projection: Projection (JSON)
-        :return:
+        Args:
+            where (dict): Query conditions (JSON)
+            order (str): Sort conditions
+            skip (int): Skip count
+            limit (int): Limit count
+            projection (dict): Projection (JSON)
+
+        Returns:
+            dict: Response JSON
         """
         query_params = {}
 
@@ -59,8 +62,11 @@ class ObjectBucket(object):
         """
         Insert JSON Object
 
-        :param dict data: Data (JSON)
-        :return: Inserted data
+        Args:
+            data (dict): Data (JSON)
+
+        Returns:
+            dict: Response JSON
         """
         r = self.service.execute_rest("POST", "/objects/" + self.bucket_name, json=data)
         res = r.json()
@@ -71,10 +77,13 @@ class ObjectBucket(object):
         """
         Update JSON Object
 
-        :param str id: ID of Object
-        :param dict data: Data (JSON)
-        :param str etag: ETag
-        :return: Updated data
+        Args:
+            id (str): ID of Object
+            data (dict): Data (JSON)
+            etag (str): ETag
+
+        Returns:
+            dict: Response JSON
         """
         query_params = {}
         if etag is not None:
@@ -89,8 +98,11 @@ class ObjectBucket(object):
         """
         Remove one JSON Object
 
-        :param str id: ID
-        :return:
+        Args:
+            id (str): ID
+
+        Returns:
+            dict: Response JSON
         """
         r = self.service.execute_rest("DELETE", "/objects/" + self.bucket_name + "/" + id, query={"deleteMark": 1})
         res = r.json()
@@ -101,8 +113,11 @@ class ObjectBucket(object):
         """
         Remove multiple JSON Objects
 
-        :param dict where: Query condition
-        :return:
+        Args:
+            where (dict): Query condition
+
+        Returns:
+            dict: Response JSON
         """
         if where is None:
             where = {}
