@@ -11,6 +11,7 @@ class FileBucket(object):
     :param Service service: Service
     :param str bucket_name: Bucket name
     """
+
     def __init__(self, service, bucket_name):
         # type: (Service, str) -> None
         self.service = service
@@ -28,32 +29,41 @@ class FileBucket(object):
         return res
 
     def upload(self, filename, data, content_type="application/octet-stream", acl=None):
-        # type: (str, Any, str, dict) -> dict
+        # type: (str, any, str, dict, bool) -> dict
         """
         Upload file
 
-        :praram str filename: Filename
+        Example::
+
+            with open("/data/data1.dat", "rb") as f:
+                bucket.upload("data1.dat", f, acl={"r": "g:anonymous"})
+
+        :param str filename: Filename
         :param data: Data
-        :param str content_type: Content-Type
-        :param dict acl: ACL
+        :param str content_type: Content-Type (default=application/octet-stream)
+        :param dict acl: ACL (default=None)
         :return: Response JSON
         """
-        return self._upload(filename, data, content_type, "POST", acl)
+        r = self._upload(filename, data, content_type, "POST", acl=acl)
+        res = r.json()
+        return res
 
     def update(self, filename, data, content_type="application/octet-stream"):
-        # type: (str, Any, str) -> dict
+        # type: (str, any, str, bool) -> dict
         """
         Update file
 
         :param str filename: ファイル名
         :param data: Data
         :param str content_type: Content-Type
-        :return:
+        :return: Response JSON
         """
-        return self._upload(filename, data, content_type, "PUT", None)
+        r = self._upload(filename, data, content_type, "PUT")
+        res = r.json()
+        return res
 
-    def _upload(self, filename, data, content_type, method, acl):
-        # type: (str, Any, str, str, dict) -> Response
+    def _upload(self, filename, data, content_type, method, acl=None):
+        # type: (str, any, str, str, dict) -> Response
         headers = {
             "Content-Type": content_type
         }
@@ -67,22 +77,29 @@ class FileBucket(object):
     def _get_file_path(self, filename):
         return "/files/" + self.bucketName + "/" + filename
 
-    def download(self, filename):
+    def download(self, filename, stream=False):
         # type: (str) -> Response
         """
         Download file.
 
-        Examples::
+        Example1 (no streaming)::
 
-            r = bucket.download("file1")
-            binary = r.content # binary content
-            text = r.text      # text content
-            json = r.json()    # json content
+            r = bucket.download("file1.json")
+            binary = r.content   # get binary content
+            #text = r.text       # get text content
+            #json = r.json()     # get json content
 
-        :param filename: Filename
-        :return: response (requests library)
+        Example2 (streaming)::
+
+            with bucket.download("file2.zip", stream=True) as r:
+                # Do things with the response here
+                # for more info, see http://docs.python-requests.org/en/master/user/advanced/#streaming-requests
+
+        :param str filename: Filename
+        :param bool stream: Stream flag
+        :return: Response (requests library)
         """
-        r = self.service.execute_rest("GET", self._get_file_path(filename))
+        r = self.service.execute_rest("GET", self._get_file_path(filename), stream=stream)
         return r
 
     def remove(self, filename):
@@ -91,7 +108,7 @@ class FileBucket(object):
         Delete file
 
         :param str filename: Filename
-        :return:
+        :return: Response JSON
         """
         r = self.service.execute_rest("DELETE", self._get_file_path(filename))
         res = r.json()

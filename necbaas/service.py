@@ -81,7 +81,7 @@ class Service(object):
         self.logger = logging.getLogger("necbaas")
         self.logger.setLevel(logging.NOTSET)
 
-    def execute_rest(self, method, path, query=None, data=None, json=None, headers=None):
+    def execute_rest(self, method, path, query=None, data=None, json=None, headers=None, stream=False):
         # (str, str, dict, Any, dict, dict) -> Response
         """
         Call REST API
@@ -92,6 +92,7 @@ class Service(object):
         :param data: Request body, in bytes, file-like object or iterable.
         :param dict json: Request JSON in dictionary.
         :param dict headers: headers
+        :param bool stream: Stream flag
         :return: Response
         """
         if not path.startswith("/"):
@@ -133,6 +134,9 @@ class Service(object):
 
         if not self.verify_server_cert:
             args["verify"] = False
+
+        if stream:
+            args["stream"] = True
 
         return self._do_request(method, **args)
 
