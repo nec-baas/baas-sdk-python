@@ -19,14 +19,14 @@ sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'necbaas'
+project = u'NEC BaaS Python SDK'
 copyright = '2018, NEC Corporation'
 author = 'NEC Corporation'
 
 # The short X.Y version
-version = ''
+version = '7.5.0'
 # The full version, including alpha/beta/rc tags
-release = ''
+release = '7.5.0'
 
 
 # -- General configuration ---------------------------------------------------
