@@ -43,15 +43,15 @@ class Apigw(object):
         Example:
             ::
 
-                res = api.execute(json={"sensor1": 45.2}, headers={"Content-Type": "application/json"}})
+                res = api.execute(json={"temperature": 26.3})
                 status = res.status()  # get status code
                 json = res.json()  # response body of JSON as dict
 
         Args:
-            data (any): Request body (optional)
-            json (dict): Request body of JSON (optional)
-            query (dict): Query parameters (optional)
-            headers (dict): Headers (optional)
+            data (any): Request body, in bytes or file-like object. This overrides 'json' argument.
+            json (dict): Request body of JSON.
+            query (dict): Query parameters.
+            headers (dict): Headers.
 
         Returns:
             Response: Response of 'requests' library.

@@ -43,7 +43,7 @@ class FileBucket(object):
 
         Args:
             filename (str): Filename
-            data (any): Data
+            data (any): File data in bytes or file-like object.
             content_type (str): Content-Type (default=application/octet-stream)
             acl (dict): ACL (default=None)
 
@@ -61,7 +61,7 @@ class FileBucket(object):
 
         Args:
             filename (str): File name
-            data (any): Data
+            data (any): File data in bytes or file-like object.
             content_type (str): Content-Type
 
         Returns:
