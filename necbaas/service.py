@@ -90,7 +90,7 @@ class Service(object):
             method (str): HTTP method name
             path (str): Path. The part after '/1/{tenantId}' of full path.
             query (dict): Query parameters in dictionary.
-            data (data): Request body, in bytes, file-like object, stream or iterable.
+            data (data): Request body, in dict (form-encoded), bytes or file-like object. This overrides 'json' argument.
             json (dict): Request JSON in dictionary.
             headers (dict): headers
             stream (bool): Stream flag
@@ -122,14 +122,13 @@ class Service(object):
 
         # set data and decide content-type
         content_type = None
-        if json is not None:
-            args["data"] = Json.dumps(json).encode("utf-8")  # Override data
-            content_type = "application/json"
         if data is not None:
             args["data"] = data
             content_type = "application/octet-stream"
+        elif json is not None:
+            args["json"] = json
 
-        if "Content-Type" not in headers and content_type is not None:
+        if content_type is not None and "Content-Type" not in headers:
             headers["Content-Type"] = content_type
 
         if "proxy" in self.param:
