@@ -29,6 +29,9 @@ class Apigw(object):
 
     def __init__(self, service, apiname, method, subpath=None):
         # type: (Service, str, str, str) -> None
+        if subpath.startswith("/"):
+            subpath = subpath[1:]
+
         self.service = service
         self.apiname = apiname
         self.method = method
