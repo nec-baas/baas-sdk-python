@@ -12,6 +12,14 @@ necbaas.apigw module
     :undoc-members:
     :show-inheritance:
 
+necbaas.buckets module
+----------------------
+
+.. automodule:: necbaas.buckets
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 necbaas.file\_bucket module
 ---------------------------
 
