@@ -9,7 +9,7 @@ class Service(object):
     """
     BaaS access service class.
 
-    Example:
+    Examples:
         ::
 
             service = necbaas.Service({

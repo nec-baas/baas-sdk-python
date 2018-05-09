@@ -7,6 +7,7 @@ class ObjectBucket(object):
     """
     JSON Object Storage Bucket.
 
+    Args:
         service (Service): Service
         bucket_name (str): Bucket name
     """

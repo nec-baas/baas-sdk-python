@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from .service import Service
 
 
@@ -7,6 +6,7 @@ class User(object):
     """
     User
 
+    Args:
         service (Service): Service
 
     Attributes:
