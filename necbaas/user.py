@@ -169,3 +169,19 @@ class User(object):
         r = service.execute_rest("GET", "/users", query=query)
         res = r.json()
         return res
+
+    @staticmethod
+    def remove(service, user_id):
+        # type: (Service, str) -> dict
+        """
+        Remove user.
+
+        Args:
+            service (Service): Service
+            user_id (str): User ID
+        Returns:
+            dict: Response JSON
+        """
+        r = service.execute_rest("DELETE", "/users/{}".format(user_id))
+        res = r.json()
+        return res
