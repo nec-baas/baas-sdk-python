@@ -4,3 +4,4 @@ from .user import User
 from .object_bucket import ObjectBucket
 from .file_bucket import FileBucket
 from .apigw import Apigw
+from .buckets import Buckets

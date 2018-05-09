@@ -27,7 +27,13 @@ class ObjectBucket(object):
     def query(self, where=None, order=None, skip=0, limit=None, projection=None):
         # type: (dict, str, int, int, dict) -> dict
         """
-        Query objects in this bucket
+        Query objects in this bucket.
+
+        Examples:
+            ::
+
+                res = bucket.query(where={"product_name": "orange"}, order="-updatedAt", limit=100)
+                results = res["results"]   # List of objects
 
         Args:
             where (dict): Query conditions (JSON)
