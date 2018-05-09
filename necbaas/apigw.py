@@ -27,7 +27,7 @@ class Apigw(object):
     # type: Service
     """Service instance"""
 
-    def __init__(self, service, apiname, method, subpath = None):
+    def __init__(self, service, apiname, method, subpath=None):
         # type: (Service, str, str, str) -> None
         self.service = service
         self.apiname = apiname
@@ -60,4 +60,3 @@ class Apigw(object):
         if self.subpath is not None:
             path = path + "/" + self.subpath
         return self.service.execute_rest(self.method, path, query=query, data=data, headers=headers)
-

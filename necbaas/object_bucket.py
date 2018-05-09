@@ -26,15 +26,14 @@ class ObjectBucket(object):
         self.bucket_name = bucket_name
 
     def query(self, where=None, order=None, skip=0, limit=None, projection=None):
-        # type: (dict, str, int, int, dict) -> dict
+        # type: (dict, str, int, int, dict) -> list
         """
         Query objects in this bucket.
 
         Examples:
             ::
 
-                res = bucket.query(where={"product_name": "orange"}, order="-updatedAt", limit=100)
-                results = res["results"]   # List of objects
+                results = bucket.query(where={"product_name": "orange"}, order="-updatedAt", limit=100)
 
         Args:
             where (dict): Query conditions (JSON)
@@ -44,7 +43,25 @@ class ObjectBucket(object):
             projection (dict): Projection (JSON)
 
         Returns:
-            dict: Response JSON
+            list: List of JSON objects
+        """
+        res = self._query(where=where, order=order, skip=skip, limit=limit, projection=projection)
+        return res["results"]
+
+    def _query(self, where=None, order=None, skip=0, limit=None, projection=None, count=False):
+        """
+        Query objects (internal).
+
+        Args:
+            where (dict): Query conditions (JSON)
+            order (str): Sort conditions
+            skip (int): Skip count
+            limit (int): Limit count
+            projection (dict): Projection (JSON)
+            count (bool): Get total count
+
+        Returns:
+            dict: Response in JSON
         """
         query_params = {}
 
@@ -58,11 +75,11 @@ class ObjectBucket(object):
             query_params["limit"] = limit
         if projection is not None:
             query_params["projection"] = json.dumps(projection)
+        if count:
+            query_params["count"] = 1
 
         r = self.service.execute_rest("GET", "/objects/" + self.bucket_name, query=query_params)
-        res = r.json()
-
-        return res  # TODO:
+        return r.json()
 
     def insert(self, data):
         # type: (dict) -> dict
@@ -79,13 +96,13 @@ class ObjectBucket(object):
         res = r.json()
         return res
 
-    def update(self, id, data, etag=None):
+    def update(self, oid, data, etag=None):
         # type: (str, dict, str) -> dict
         """
         Update JSON Object
 
         Args:
-            id (str): ID of Object
+            oid (str): ID of Object
             data (dict): Data (JSON)
             etag (str): ETag
 
@@ -96,22 +113,22 @@ class ObjectBucket(object):
         if etag is not None:
             query_params["etag"] = etag
 
-        r = self.service.execute_rest("PUT", "/objects/" + self.bucket_name + "/" + id, query=query_params, json=data)
+        r = self.service.execute_rest("PUT", "/objects/" + self.bucket_name + "/" + oid, query=query_params, json=data)
         res = r.json()
         return res
 
-    def remove(self, id):
+    def remove(self, oid):
         # type: (str) -> dict
         """
         Remove one JSON Object
 
         Args:
-            id (str): ID
+            oid (str): Object ID
 
         Returns:
             dict: Response JSON
         """
-        r = self.service.execute_rest("DELETE", "/objects/" + self.bucket_name + "/" + id, query={"deleteMark": 1})
+        r = self.service.execute_rest("DELETE", "/objects/" + self.bucket_name + "/" + oid, query={"deleteMark": 1})
         res = r.json()
         return res
 

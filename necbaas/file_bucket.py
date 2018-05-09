@@ -105,7 +105,8 @@ class FileBucket(object):
                 with bucket.download("file2.zip", stream=True) as r:
                     # Do things with the response here
 
-            For details of streaming support, see http://docs.python-requests.org/en/master/user/advanced/#streaming-requests.
+            For details of streaming support,
+            see http://docs.python-requests.org/en/master/user/advanced/#streaming-requests.
 
         Args:
             filename (str): Filename

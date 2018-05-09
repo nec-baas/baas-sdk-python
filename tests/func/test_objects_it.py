@@ -63,8 +63,7 @@ class ObjectStorageIT(TestCase):
         self.assertEqual(res["key1"], 23456)
 
         # query
-        res = b.query(where={"key1": 23456})
-        results = res["results"]
+        results = b.query(where={"key1": 23456})
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]["key1"], 23456)
 

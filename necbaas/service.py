@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import requests
-import json as Json
 import logging
 from requests import Response
 
@@ -90,7 +89,8 @@ class Service(object):
             method (str): HTTP method name
             path (str): Path. The part after '/1/{tenantId}' of full path.
             query (dict): Query parameters in dictionary.
-            data (data): Request body, in dict (form-encoded), bytes or file-like object. This overrides 'json' argument.
+            data (data): Request body, in dict (form-encoded), bytes or file-like object.
+                This overrides 'json' argument.
             json (dict): Request JSON in dictionary.
             headers (dict): headers
             stream (bool): Stream flag
