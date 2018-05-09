@@ -9,7 +9,10 @@ requires = [
 
 test_requires = [
     'nose',
-    'mock'
+    'mock',
+    'pyyaml',
+    'tox',
+    'coverage'
 ]
 
 doc_requires = [
