@@ -1,5 +1,6 @@
 from unittest import TestCase
 import requests
+from requests.exceptions import HTTPError
 
 import necbaas as baas
 from . import util
@@ -14,11 +15,7 @@ class UserIT(TestCase):
     def setUp(self):
         self.service = util.create_service()
         self.masterService = util.create_service(master=True)
-
-        users = baas.User.query(self.masterService)
-        for u in users:
-            print(u)
-            baas.User.remove(self.masterService, u["_id"])
+        util.remove_all_users()
 
     def register_user(self):
         u = baas.User(self.service)
@@ -41,7 +38,7 @@ class UserIT(TestCase):
 
         try:
             u.register()
-        except requests.exceptions.HTTPError as e:
+        except HTTPError as e:
             s = e.response.status_code
             self.assertEqual(s, 409)
 
@@ -65,7 +62,7 @@ class UserIT(TestCase):
         # no result
         try:
             baas.User.query(self.masterService, username="no_such_user")
-        except requests.exceptions.HTTPError as e:
+        except HTTPError as e:
             self.assertEqual(e.response.status_code, 404)
 
     def test_login_logout(self):

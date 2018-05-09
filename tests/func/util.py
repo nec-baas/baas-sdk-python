@@ -30,3 +30,12 @@ def create_service(master=False):
     if master:
         param["appKey"] = param["masterKey"]
     return baas.Service(param)
+
+
+def remove_all_users():
+    s = create_service(True)
+
+    users = baas.User.query(s)
+    for u in users:
+        print(u)
+        baas.User.remove(s, u["_id"])
