@@ -143,7 +143,7 @@ class User(object):
         if self.options is not None:
             body["options"] = self.options
 
-        r = self.service.execute_rest("POST", "/users", data=body)
+        r = self.service.execute_rest("POST", "/users", json=body)
         res = r.json()
         return res
 
