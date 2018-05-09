@@ -95,8 +95,7 @@ class User(object):
         r = service.execute_rest("POST", "/login", json=param)
         res = r.json()
 
-        session_token = res["sessionToken"]
-        service.set_session_token(session_token)
+        service.session_token = res["sessionToken"]
         return res
 
     @staticmethod
@@ -112,7 +111,7 @@ class User(object):
         """
         r = service.execute_rest("DELETE", "/login")
         res = r.json()
-        service.set_session_token(None)
+        service.session_token = None
         return res
 
     def register(self):
@@ -149,7 +148,7 @@ class User(object):
 
     @staticmethod
     def query(service, username=None, email=None):
-        # type: (Service, str, str) -> dict
+        # type: (Service, str, str) -> list
         """
         Query user.
 
@@ -158,7 +157,7 @@ class User(object):
             username (str): Username (optional)
             email (str): E-mail (optional)
         Returns:
-            dict: Response JSON
+            list: List of user info
         """
         query = {}
         if username is not None:
@@ -168,7 +167,7 @@ class User(object):
 
         r = service.execute_rest("GET", "/users", query=query)
         res = r.json()
-        return res
+        return res["results"]
 
     @staticmethod
     def remove(service, user_id):
