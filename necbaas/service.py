@@ -160,7 +160,7 @@ class Service(object):
 
         status = res.status_code
         if status >= 400:
-            self.logger.warning("HTTP request error: status=%d", status)
+            self.logger.warning("HTTP request error: status=%d, body=%s", status, res.content)
             res.raise_for_status()
         else:
             self.logger.debug("HTTP response: status=%d", status)
