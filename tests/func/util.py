@@ -1,6 +1,8 @@
 import os
 import yaml
 
+import necbaas as baas
+
 
 def load_config():
     """
@@ -12,3 +14,19 @@ def load_config():
     config = yaml.load(f)
     f.close()
     return config
+
+
+def create_service(master=False):
+    """
+    Create service from config file.
+
+    Args:
+        master (bool): use master key
+    Returns:
+        Service: service
+    """
+    c = load_config()
+    param = c["service"]
+    if master:
+        param["appKey"] = param["masterKey"]
+    return baas.Service(param)
