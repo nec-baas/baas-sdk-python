@@ -6,6 +6,13 @@ from . import util
 
 
 class UserIT(TestCase):
+    def setUp(self):
+        s = util.create_service(master=True)
+        res = baas.User.query(s)
+        for u in res["results"]:
+            print(u)
+            baas.User.remove(s, u["_id"])
+
     def test_register(self):
         s = util.create_service()
 
