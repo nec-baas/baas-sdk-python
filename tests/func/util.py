@@ -8,7 +8,8 @@ def load_config():
     """
     Load test config from ~/.baas/python_test_config.yaml
 
-    :return dict: config in dict
+    Returns:
+        dict: Loaded config
     """
     f = open(os.path.expanduser("~/.baas/python_test_config.yaml"), 'r')
     config = yaml.load(f)

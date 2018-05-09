@@ -78,7 +78,7 @@ class ObjectBucket(object):
         if count:
             query_params["count"] = 1
 
-        r = self.service.execute_rest("GET", "/objects/" + self.bucket_name, query=query_params)
+        r = self.service.execute_rest("GET", "/objects/{}".format(self.bucket_name), query=query_params)
         return r.json()
 
     def insert(self, data):
@@ -92,7 +92,7 @@ class ObjectBucket(object):
         Returns:
             dict: Response JSON
         """
-        r = self.service.execute_rest("POST", "/objects/" + self.bucket_name, json=data)
+        r = self.service.execute_rest("POST", "/objects/{}".format(self.bucket_name), json=data)
         res = r.json()
         return res
 
@@ -113,7 +113,8 @@ class ObjectBucket(object):
         if etag is not None:
             query_params["etag"] = etag
 
-        r = self.service.execute_rest("PUT", "/objects/" + self.bucket_name + "/" + oid, query=query_params, json=data)
+        r = self.service.execute_rest("PUT", "/objects/{}/{}".format(self.bucket_name, oid),
+                                      query=query_params, json=data)
         res = r.json()
         return res
 
@@ -128,7 +129,7 @@ class ObjectBucket(object):
         Returns:
             dict: Response JSON
         """
-        r = self.service.execute_rest("DELETE", "/objects/" + self.bucket_name + "/" + oid, query={"deleteMark": 1})
+        r = self.service.execute_rest("DELETE", "/objects/{}/{}".format(self.bucket_name, oid), query={"deleteMark": 1})
         res = r.json()
         return res
 
@@ -151,6 +152,6 @@ class ObjectBucket(object):
             "deleteMark": 1
         }
         
-        r = self.service.execute_rest("DELETE", "/objects/" + self.bucket_name, query=query_params)
+        r = self.service.execute_rest("DELETE", "/objects/{}".format(self.bucket_name), query=query_params)
         res = r.json()
         return res

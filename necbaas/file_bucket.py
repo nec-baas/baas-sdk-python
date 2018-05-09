@@ -16,7 +16,7 @@ class FileBucket(object):
     def __init__(self, service, bucket_name):
         # type: (Service, str) -> None
         self.service = service
-        self.bucketName = bucket_name
+        self.bucket_name = bucket_name
 
     def query(self):
         # type: () -> dict
@@ -26,12 +26,12 @@ class FileBucket(object):
         Returns:
             dict: Response JSON
         """
-        r = self.service.execute_rest("GET", "/files/" + self.bucketName)
+        r = self.service.execute_rest("GET", "/files/{}".format(self.bucket_name))
         res = r.json()
         return res
 
     def upload(self, filename, data, content_type="application/octet-stream", acl=None):
-        # type: (str, any, str, dict, bool) -> dict
+        # type: (str, any, str, dict) -> dict
         """
         Upload file
 
@@ -55,7 +55,7 @@ class FileBucket(object):
         return res
 
     def update(self, filename, data, content_type="application/octet-stream"):
-        # type: (str, any, str, bool) -> dict
+        # type: (str, any, str) -> dict
         """
         Update file
 
@@ -84,7 +84,7 @@ class FileBucket(object):
         return res
 
     def _get_file_path(self, filename):
-        return "/files/" + self.bucketName + "/" + filename
+        return "/files/{}/{}".format(self.bucket_name, filename)
 
     def download(self, filename, stream=False):
         # type: (str) -> Response

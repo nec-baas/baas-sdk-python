@@ -98,11 +98,11 @@ class Service(object):
         Returns:
             Response: Response
         """
-        if not path.startswith("/"):
-            path = "/" + path
+        if path.startswith("/"):
+            path = path[1:]
 
         args = {
-            "url": self.param["baseUrl"] + "/1/" + self.param["tenantId"] + path
+            "url": "{}/1/{}/{}".format(self.param["baseUrl"], self.param["tenantId"], path)
         }
 
         # query parameters
