@@ -45,10 +45,31 @@ class FileBucket(object):
         res = r.json()
         return res
 
+    def update_metadata(self, filename, meta, etag=None):
+        # type: (str, dict) -> dict
+        """
+        Update file metadata
+
+        Args:
+            filename (str): File name
+            meta (dict): File metadata (JSON)
+            etag (str): ETag of file metadata (optional)
+
+        Returns:
+            dict: Updated file metadata
+        """
+        param = None
+        if etag is None:
+            param = {"metaETag": etag}
+
+        r = self.service.execute_rest("PUT", "/files/{}/{}".format(self.bucket_name, filename), json=meta, param=param)
+        res = r.json()
+        return res
+
     def upload(self, filename, data, content_type="application/octet-stream", acl=None):
         # type: (str, any, str, dict) -> dict
         """
-        Upload file
+        Upload file.
 
         Example:
             ::
@@ -72,7 +93,7 @@ class FileBucket(object):
     def update(self, filename, data, content_type="application/octet-stream", meta_etag=None, file_etag=None):
         # type: (str, any, str) -> dict
         """
-        Update file
+        Update file body.
 
         Args:
             filename (str): File name
