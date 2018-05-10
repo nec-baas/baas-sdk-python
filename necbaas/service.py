@@ -75,7 +75,7 @@ class Service(object):
         self.param = param
         self.session_token = None
         self.logger = logging.getLogger("necbaas")
-        self.logger.setLevel(logging.NOTSET)
+        self.logger.setLevel(logging.WARNING)
 
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None, stream=False):
         # (str, str, dict, Any, dict, dict) -> Response
