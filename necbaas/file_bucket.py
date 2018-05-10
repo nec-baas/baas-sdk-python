@@ -19,16 +19,16 @@ class FileBucket(object):
         self.bucket_name = bucket_name
 
     def query(self):
-        # type: () -> dict
+        # type: () -> list
         """
         Query file list.
 
         Returns:
-            dict: Response JSON
+            list: List of file metadata JSON
         """
         r = self.service.execute_rest("GET", "/files/{}".format(self.bucket_name))
         res = r.json()
-        return res
+        return res["results"]
 
     def get_metadata(self, filename):
         # type: (str) -> dict
