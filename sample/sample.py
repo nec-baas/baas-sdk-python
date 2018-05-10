@@ -26,7 +26,7 @@ obj["score"] = 95
 res = objectBucket.update(obj["_id"], obj, obj["etag"])
 print("update:", res)
 
-res = objectBucket.query({}, None, 0, -1)
+res = objectBucket.query(where={})
 print("query:", res)
 
 res = objectBucket.remove_with_query({})
@@ -42,7 +42,7 @@ acl = {
     "w": ["g:anonymous"]
 }
 
-res = fileBucket.upload("test.txt", "TESTDATA".encode("utf-8"), "plain/text", acl)
+res = fileBucket.upload("test.txt", "TESTDATA".encode("utf-8"), "plain/text", acl=acl)
 #res = bucket2.update("test.txt", "TESTDATA".encode("utf-8"), "plain/text")
 print(res)
 
