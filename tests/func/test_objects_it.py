@@ -12,10 +12,14 @@ class ObjectStorageIT(TestCase):
     # type: baas.Service
     user = None
     # type: baas.User
+    buckets = None
+    # type: baas.Buckets
 
     def setUp(self):
         self.service = util.create_service()
         self.masterService = util.create_service(master=True)
+
+        self.buckets = baas.Buckets(self.masterService, "object")
 
         util.remove_all_users()
 
@@ -31,12 +35,11 @@ class ObjectStorageIT(TestCase):
         baas.User.login_with_username(self.service, user.username, user.password)
 
         # Create test bucket
-        baas.Buckets.upsert(self.masterService, "object", "bucket1",
-                            content_acl={"r": ["g:authenticated"], "w": ["g:authenticated"]})
+        self.buckets.upsert("bucket1", content_acl={"r": ["g:authenticated"], "w": ["g:authenticated"]})
 
     def tearDown(self):
         try:
-            baas.Buckets.remove(self.masterService, "object", "bucket1")
+            self.buckets.remove("bucket1")
         except HTTPError:
             pass  # ignore...
 

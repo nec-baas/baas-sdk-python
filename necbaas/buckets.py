@@ -5,18 +5,27 @@ from .service import Service
 class Buckets(object):
     """
     Bucket Manager
+
+    Args:
+        service (Service): Service
+        bucket_type (str): Bucket type, "object" or "file".
     """
 
-    @staticmethod
-    def upsert(service, bucket_type, name, desc="", acl=None, content_acl=None):
-        # type: (Service, str, str) -> dict
+    def __init__(self, service, bucket_type):
+        # type: (Service, str) -> dict
+        self.service = service
+        self.bucket_type = bucket_type
+
+        if bucket_type is not "object" and bucket_type is not "file":
+            raise ValueError("bad bucket_type")
+
+    def upsert(self, name, desc="", acl=None, content_acl=None):
+        # type: (str, str, dict, dict) -> dict
         """
         Create/Update bucket.
         
         Args:
-            service (Service): Service 
-            bucket_type (str): Bucket type, "object" or "file". 
-            name (str): Bucket name 
+            name (str): Bucket name
             desc (str): Description
             acl (dict): Bucket ACL
             content_acl (dict): Content ACL
@@ -31,57 +40,46 @@ class Buckets(object):
             body["ACL"] = acl
         if content_acl is not None:
             body["contentACL"] = content_acl
-        r = service.execute_rest("PUT", "buckets/{}/{}".format(bucket_type, name), json=body)
+        r = self.service.execute_rest("PUT", "buckets/{}/{}".format(self.bucket_type, name), json=body)
         return r.json()
 
-    @staticmethod
-    def query(service, bucket_type):
-        # type: (Service, str) -> list
+    def query(self):
+        # type: () -> list
         """
         Query buckets.
-
-        Args:
-            service (Service): Service
-            bucket_type (str): Bucket type, "object" or "file".
 
         Returns:
             list: List of bucket info
 
         """
-        r = service.execute_rest("GET", "buckets/{}".format(bucket_type))
+        r = self.service.execute_rest("GET", "buckets/{}".format(self.bucket_type))
         res = r.json()
         return res["results"]
 
-    @staticmethod
-    def get(service, bucket_type, name):
-        # type: (Service, str) -> dict
+    def get(self, name):
+        # type: (str) -> dict
         """
         Query bucket.
 
         Args:
-            service (Service): Service
-            bucket_type (str): Bucket type, "object" or "file".
             name (str): Bucket name.
 
         Returns:
             dict: Bucket info
         """
-        r = service.execute_rest("GET", "buckets/{}/{}".format(bucket_type, name))
+        r = self.service.execute_rest("GET", "buckets/{}/{}".format(self.bucket_type, name))
         return r.json()
 
-    @staticmethod
-    def remove(service, bucket_type, name):
-        # type: (Service, str) -> dict
+    def remove(self, name):
+        # type: (str) -> dict
         """
         Remove bucket.
 
         Args:
-            service (Service): Service
-            bucket_type (str): Bucket type, "object" or "file".
             name (str): Bucket name.
 
         Returns:
             dict: Bucket info
         """
-        r = service.execute_rest("DELETE", "buckets/{}/{}".format(bucket_type, name))
+        r = self.service.execute_rest("DELETE", "buckets/{}/{}".format(self.bucket_type, name))
         return r.json()
