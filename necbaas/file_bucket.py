@@ -30,6 +30,21 @@ class FileBucket(object):
         res = r.json()
         return res
 
+    def get_metadata(self, filename):
+        # type: (str) -> dict
+        """
+        Get file metadata.
+
+        Args:
+            filename (str): File name
+
+        Returns:
+            dict: File Metadata
+        """
+        r = self.service.execute_rest("GET", "/files/{}/{}".format(self.bucket_name, filename))
+        res = r.json()
+        return res
+
     def upload(self, filename, data, content_type="application/octet-stream", acl=None):
         # type: (str, any, str, dict) -> dict
         """
@@ -54,7 +69,7 @@ class FileBucket(object):
         res = r.json()
         return res
 
-    def update(self, filename, data, content_type="application/octet-stream"):
+    def update(self, filename, data, content_type="application/octet-stream", meta_etag=None, file_etag=None):
         # type: (str, any, str) -> dict
         """
         Update file
@@ -63,23 +78,31 @@ class FileBucket(object):
             filename (str): File name
             data (any): File data in bytes or file-like object.
             content_type (str): Content-Type
+            meta_etag (str): File metadata ETag
+            file_etag (str): File body ETag
 
         Returns:
             dict: Response JSON
         """
-        r = self._upload(filename, data, content_type, "PUT")
+        params = {}
+        if meta_etag is not None:
+            params["metaETag"] = meta_etag
+        if file_etag is not None:
+            params["fileETag"] = file_etag
+
+        r = self._upload(filename, data, content_type, "PUT", params=params)
         res = r.json()
         return res
 
-    def _upload(self, filename, data, content_type, method, acl=None):
-        # type: (str, any, str, str, dict) -> Response
+    def _upload(self, filename, data, content_type, method, acl=None, params=None):
+        # type: (str, any, str, str, dict, dict) -> Response
         headers = {
             "Content-Type": content_type
         }
         if acl is not None:
             headers["X-ACL"] = json.dumps(acl)
 
-        r = self.service.execute_rest(method, self._get_file_path(filename), data=data, headers=headers)
+        r = self.service.execute_rest(method, self._get_file_path(filename), data=data, params=params, headers=headers)
         res = r.json()
         return res
 
