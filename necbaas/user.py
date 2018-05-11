@@ -96,6 +96,7 @@ class User(object):
         res = r.json()
 
         service.session_token = res["sessionToken"]
+        service.session_token_expire = res["expire"]
         return res
 
     @staticmethod
@@ -112,6 +113,7 @@ class User(object):
         r = service.execute_rest("DELETE", "/login")
         res = r.json()
         service.session_token = None
+        service.session_token_expire = None
         return res
 
     def register(self):

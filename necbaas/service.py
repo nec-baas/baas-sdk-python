@@ -43,6 +43,10 @@ class Service(object):
     # type: str
     """Session Token"""
 
+    session_token_expire = None
+    # type: int
+    """Session Token expire time (unix epoch seconds)"""
+
     verify_server_cert = True
     # type: bool
     """Verify server cert (default: True)"""

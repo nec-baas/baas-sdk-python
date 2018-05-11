@@ -73,8 +73,10 @@ class UserIT(TestCase):
         #print(res)
 
         self.assertNotEqual(self.service.session_token, None)
+        self.assertNotEqual(self.service.session_token_expire, None)
 
         res = baas.User.logout(self.service)
         self.assertEqual(self.service.session_token, None)
+        self.assertEqual(self.service.session_token_expire, None)
 
 
