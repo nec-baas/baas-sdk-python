@@ -58,13 +58,13 @@ class Service(object):
         """
         # verify params
         if "baseUrl" not in param:
-            raise Exception("No baseUrl")
+            raise ValueError("No baseUrl")
         if "tenantId" not in param:
-            raise Exception("No tenantId")
+            raise ValueError("No tenantId")
         if "appId" not in param:
-            raise Exception("No appId")
+            raise ValueError("No appId")
         if "appKey" not in param:
-            raise Exception("No appKey")
+            raise ValueError("No appKey")
 
         # normalise baseUrl
         base_url = str(param["baseUrl"])
