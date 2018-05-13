@@ -1,4 +1,3 @@
-from unittest import TestCase
 import requests
 from requests.exceptions import HTTPError
 
@@ -6,13 +5,13 @@ import necbaas as baas
 from . import util
 
 
-class UserIT(TestCase):
+class TestUser(object):
     service = None
     # type: baas.Service
     masterService = None
     # type: baas.Service
 
-    def setUp(self):
+    def setup(self):
         self.service = util.create_service()
         self.masterService = util.create_service(master=True)
         util.remove_all_users()
@@ -40,43 +39,43 @@ class UserIT(TestCase):
             u.register()
         except HTTPError as e:
             s = e.response.status_code
-            self.assertEqual(s, 409)
+            assert s == 409
 
     def test_query(self):
         self.register_user()
 
         # query all
         users = baas.User.query(self.masterService)
-        self.assertEqual(len(users), 1)
+        assert len(users) == 1
 
         # query by user id
         users = baas.User.query(self.masterService, username="user1")
-        self.assertEqual(len(users), 1)
-        self.assertEqual(users[0]["username"], "user1")
+        assert len(users) == 1
+        assert users[0]["username"] == "user1"
 
         # query by email
         users = baas.User.query(self.masterService, email="user1@example.com")
-        self.assertEqual(len(users), 1)
-        self.assertEqual(users[0]["username"], "user1")
+        assert len(users) == 1
+        assert users[0]["username"] == "user1"
 
         # no result
         try:
             baas.User.query(self.masterService, username="no_such_user")
         except HTTPError as e:
-            self.assertEqual(e.response.status_code, 404)
+            assert e.response.status_code == 404
 
     def test_login_logout(self):
         u = self.register_user()
-        self.assertEqual(self.service.session_token, None)
+        assert self.service.session_token is None
 
         res = baas.User.login(self.service, {"username": u.username, "password": u.password})
         #print(res)
 
-        self.assertNotEqual(self.service.session_token, None)
-        self.assertNotEqual(self.service.session_token_expire, None)
+        assert self.service.session_token is not None
+        assert self.service.session_token_expire is not None
 
         res = baas.User.logout(self.service)
-        self.assertEqual(self.service.session_token, None)
-        self.assertEqual(self.service.session_token_expire, None)
+        assert self.service.session_token is None
+        assert self.service.session_token_expire is None
 
 

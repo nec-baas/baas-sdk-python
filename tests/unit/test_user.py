@@ -1,10 +1,9 @@
-from unittest import TestCase
 from mock import patch, MagicMock
 
 import necbaas as baas
 
 
-class UserTestCase(TestCase):
+class TestUser(object):
     def get_service(self):
         param = {
             "baseUrl": "http://localhost/api",
@@ -18,11 +17,11 @@ class UserTestCase(TestCase):
         """正常に初期化できること"""
         s = self.get_service()
         u = baas.User(s)
-        self.assertEqual(u.service, s)
-        self.assertIsNone(u.username)
-        self.assertIsNone(u.email)
-        self.assertIsNone(u.password)
-        self.assertIsNone(u.options)
+        assert u.service == s
+        assert u.username is None
+        assert u.email is None
+        assert u.password is None
+        assert u.options is None
 
     def test_register(self):
         """正常に登録できること"""
@@ -35,11 +34,11 @@ class UserTestCase(TestCase):
         u.register()
 
         args = mock_service.execute_rest.call_args
-        self.assertEqual(args[0], ("POST", "/users"))
+        assert args[0], ("POST" == "/users")
         json = args[1]["json"]
-        self.assertEqual(json["username"], "user1")
-        self.assertEqual(json["email"], "user1@example.com")
-        self.assertEqual(json["password"], "pass")
+        assert json["username"] == "user1"
+        assert json["email"] == "user1@example.com"
+        assert json["password"] == "pass"
 
     def _mock_response_json(self, json):
         """
@@ -62,8 +61,8 @@ class UserTestCase(TestCase):
 
         baas.User.login_with_username(service, "user1", "pass1")
 
-        self.assertEqual(service.session_token, "TOKEN")
-        self.assertEqual(service.session_token_expire, 12345)
+        assert service.session_token == "TOKEN"
+        assert service.session_token_expire == 12345
 
 
 
