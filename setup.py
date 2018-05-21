@@ -22,7 +22,7 @@ doc_requires = [
 
 setup(
     name='necbaas',
-    version='0.0.2',
+    version='7.5.0b1',
     packages=['necbaas'],
     description='NEC Mobile Backend platform Python SDK',
     author='NEC Corporation',
