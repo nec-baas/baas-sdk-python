@@ -59,7 +59,7 @@ class FileBucket(object):
             dict: Updated file metadata
         """
         param = None
-        if etag is None:
+        if etag is not None:
             param = {"metaETag": etag}
 
         r = self.service.execute_rest("PUT", "/files/{}/{}".format(self.bucket_name, filename), json=meta, param=param)
