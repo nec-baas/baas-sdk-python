@@ -31,7 +31,7 @@ class TestObjectStorage(object):
         self.user = user
 
         # Login
-        baas.User.login_with_username(self.service, user.username, user.password)
+        baas.User.login(self.service, username=user.username, password=user.password)
 
         # Create test bucket
         self.buckets.upsert("bucket1", content_acl={"r": ["g:authenticated"], "w": ["g:authenticated"]})
