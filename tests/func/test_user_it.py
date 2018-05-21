@@ -69,7 +69,7 @@ class UserIT(TestCase):
         u = self.register_user()
         self.assertEqual(self.service.session_token, None)
 
-        res = baas.User.login(self.service, {"username": u.username, "password": u.password})
+        res = baas.User.login(self.service,username=u.username, password=u.password)
         #print(res)
 
         self.assertNotEqual(self.service.session_token, None)

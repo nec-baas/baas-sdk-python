@@ -60,7 +60,7 @@ class UserTestCase(TestCase):
         """正常にログインできること"""
         service = self._mock_response_json({"sessionToken": "TOKEN", "expire": 12345})
 
-        baas.User.login_with_username(service, "user1", "pass1")
+        baas.User.login(service, username="user1", password="pass1")
 
         self.assertEqual(service.session_token, "TOKEN")
         self.assertEqual(service.session_token_expire, 12345)

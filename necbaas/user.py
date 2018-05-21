@@ -25,74 +25,48 @@ class User(object):
         self.options = None
 
     @staticmethod
-    def login_with_username(service, username, password):
-        # type: (Service, str, str) -> dict
-        """
-        Login with user name
-
-        Example:
-            ::
-
-                result = necbaas.User.login_with_username(service, "foo", "Passw0rD")
-
-        Args:
-            service (Service): Service
-            username (str): User name
-            password (str): Password
-        Returns:
-            dict: Response JSON in dictionary
-        """
-        return User.login(service, {
-            "username": username,
-            "password": password
-        })
-
-    @staticmethod
-    def login_with_email(service, email, password):
-        # type: (Service, str, str) -> dict
-        """
-        Login with E-mail
-
-        Example:
-            ::
-
-                result = necbaas.User.login_with_email(service, "foo@example.com", "Passw0rD")
-
-        Args:
-            service (Service): Service
-            email (str): User name
-            password (str): Password
-        Returns:
-            dict: Response JSON
-        """
-        return User.login(service, {
-            "email": email,
-            "password": password
-        })
-
-    @staticmethod
-    def login(service, param):
+    def login(service, username=None, email=None, password=None, params=None):
         # type: (Service, dict) -> dict
         """
         Login
 
         Example:
             ::
+                # login with username
+                result = necbaas.User.login(service, username="user1", password="Passw0rD")
 
-                result = necbaas.User.login(service, {
+                # login with email
+                result = necbaas.User.login(service, email="user1@example.com", password="Passw0rD")
+
+                # login with dict
+                result = necbaas.User.login(service, params={
                     "username": "foo",
                     "password": "Passw0rD"
                 })
 
         Args:
             service (Service): Service
-            param (dict): dictionary. The parameter is encoded in JSON and sent to server.
+            username (str): User name
+            email (str): E-mail
+            password (str): Password
+            params (dict): dictionary. The parameter is encoded in JSON and sent to server.
                 Usually contains username or email, and password.
 
         Returns:
             dict: Response JSON
         """
-        r = service.execute_rest("POST", "/login", json=param)
+        if params is None:
+            if password is None:
+                raise ValueError("No password nor params")
+            params = {"password": password}
+            if username is not None:
+                params["username"] = username
+            elif email is not None:
+                params["email"] = email
+            else:
+                raise ValueError("No username nor email")
+
+        r = service.execute_rest("POST", "/login", json=params)
         res = r.json()
 
         service.session_token = res["sessionToken"]
