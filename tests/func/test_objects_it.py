@@ -1,57 +1,13 @@
-from requests.exceptions import HTTPError
-
 import necbaas as baas
-from . import util
+from .test_storage_base import TestStorageBase
 
 
-class TestObjectStorage(object):
-    service = None
-    # type: baas.Service
-    masterService = None
-    # type: baas.Service
-    user = None
-    # type: baas.User
-    buckets = None
-    # type: baas.Buckets
-
+class TestObjectStorage(TestStorageBase):
     def setup(self):
-        self.service = util.create_service()
-        self.masterService = util.create_service(master=True)
-
-        self.buckets = baas.Buckets(self.masterService, "object")
-
-        util.remove_all_users()
-
-        # Register user
-        user = baas.User(self.service)
-        user.username = "user1"
-        user.email = "user1@example.com"
-        user.password = "Passw0rD"
-        user.register()
-        self.user = user
-
-        # Login
-        baas.User.login(self.service, username=user.username, password=user.password)
-
-        # Create test bucket
-        self.buckets.upsert("bucket1", content_acl={"r": ["g:authenticated"], "w": ["g:authenticated"]})
+        self.setup_bucket_and_user("object")
 
     def teardown(self):
-        try:
-            self.buckets.remove("bucket1")
-        except HTTPError:
-            pass  # ignore...
-
-        try:
-            baas.User.logout(self.service)
-        except HTTPError:
-            pass  # ignore...
-
-        try:
-            users = baas.User.query(self.masterService, username="user1")
-            baas.User.remove(self.masterService, users[0]["_id"])
-        except HTTPError:
-            pass  # ignore...
+        self.cleanup()
 
     def test_crud(self):
         b = baas.ObjectBucket(self.service, "bucket1")
