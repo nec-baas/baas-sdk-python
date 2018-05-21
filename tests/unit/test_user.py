@@ -3,6 +3,8 @@ import pytest
 
 import necbaas as baas
 
+from .util import mock_service_json_resp
+
 
 class TestUser(object):
     def get_service(self):
@@ -43,24 +45,9 @@ class TestUser(object):
         assert json["password"] == "pass"
         assert json["options"] == {"realname": "Foo Bar"}
 
-    def _mock_response_json(self, json):
-        """
-        mock_service.execute_rest() の JSON 応答を mock する
-
-        Args:
-            mock_service: Mock Service
-            json: Response Json
-        """
-        response = MagicMock()
-        response.json.return_value = json
-
-        service = MagicMock()
-        service.execute_rest.return_value = response
-        return service
-
     def test_login_username(self):
         """username で正常にログインできること"""
-        service = self._mock_response_json({"sessionToken": "TOKEN", "expire": 12345})
+        service = mock_service_json_resp({"sessionToken": "TOKEN", "expire": 12345})
 
         baas.User.login(service, username="user1", password="pass1")
 
@@ -72,7 +59,7 @@ class TestUser(object):
 
     def test_login_email(self):
         """email で正常にログインできること"""
-        service = self._mock_response_json({"sessionToken": "TOKEN", "expire": 12345})
+        service = mock_service_json_resp({"sessionToken": "TOKEN", "expire": 12345})
 
         baas.User.login(service, email="user1@example.com", password="pass1")
 
@@ -94,7 +81,7 @@ class TestUser(object):
 
     def test_logout(self):
         """正常にログアウトできること"""
-        service = self._mock_response_json({})
+        service = mock_service_json_resp({})
         service.session_token = "TOKEN"
         service.session_token_expire = 12345
 
@@ -109,7 +96,7 @@ class TestUser(object):
     def test_query(self):
         """正常にクエリできること"""
         expected = [{"username": "user1"}, {"username": "user2"}]
-        service = self._mock_response_json({"results": expected})
+        service = mock_service_json_resp({"results": expected})
 
         results = baas.User.query(service, username="user1", email="user1@example.com")
         assert results == expected
@@ -120,7 +107,7 @@ class TestUser(object):
 
     def test_remove(self):
         """正常にユーザ削除できること"""
-        service = self._mock_response_json({"_id": "user01"})
+        service = mock_service_json_resp({"_id": "user01"})
 
         result = baas.User.remove(service, "user01")
         assert result == {"_id": "user01"}
