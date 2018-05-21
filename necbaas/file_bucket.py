@@ -58,11 +58,11 @@ class FileBucket(object):
         Returns:
             dict: Updated file metadata
         """
-        param = None
+        query = None
         if etag is not None:
-            param = {"metaETag": etag}
+            query = {"metaETag": etag}
 
-        r = self.service.execute_rest("PUT", "/files/{}/{}".format(self.bucket_name, filename), json=meta, param=param)
+        r = self.service.execute_rest("PUT", "/files/{}/{}".format(self.bucket_name, filename), json=meta, query=query)
         res = r.json()
         return res
 
@@ -105,17 +105,17 @@ class FileBucket(object):
         Returns:
             dict: Response JSON
         """
-        params = {}
+        query = {}
         if meta_etag is not None:
-            params["metaETag"] = meta_etag
+            query["metaETag"] = meta_etag
         if file_etag is not None:
-            params["fileETag"] = file_etag
+            query["fileETag"] = file_etag
 
-        r = self._upload(filename, data, content_type, "PUT", params=params)
+        r = self._upload(filename, data, content_type, "PUT", query=query)
         res = r.json()
         return res
 
-    def _upload(self, filename, data, content_type, method, acl=None, params=None):
+    def _upload(self, filename, data, content_type, method, acl=None, query=None):
         # type: (str, any, str, str, dict, dict) -> Response
         headers = {
             "Content-Type": content_type
@@ -123,7 +123,7 @@ class FileBucket(object):
         if acl is not None:
             headers["X-ACL"] = json.dumps(acl)
 
-        r = self.service.execute_rest(method, self._get_file_path(filename), data=data, params=params, headers=headers)
+        r = self.service.execute_rest(method, self._get_file_path(filename), data=data, query=query, headers=headers)
         res = r.json()
         return res
 
