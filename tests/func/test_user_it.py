@@ -47,29 +47,42 @@ class TestUser(object):
         s = e.response.status_code
         assert s == 409
 
-    def test_query(self):
+    def test_query_all(self):
         """
-        ユーザ検索テスト
-        - 全件検索
-        - ユーザ名指定検索
-        - email指定検索
-        - ユーザ存在しない
+        ユーザ全件検索
         """
         self.register_user()
 
-        # query all
         users = baas.User.query(self.masterService)
         assert len(users) == 1
+
+    def test_query_username(self):
+        """
+        ユーザ名検索
+        """
+        self.register_user()
 
         # query by user id
         users = baas.User.query(self.masterService, username="user1")
         assert len(users) == 1
         assert users[0]["username"] == "user1"
 
+    def test_query_email(self):
+        """
+        E-mail検索
+        """
+        self.register_user()
+
         # query by email
         users = baas.User.query(self.masterService, email="user1@example.com")
         assert len(users) == 1
         assert users[0]["username"] == "user1"
+
+    def test_query_not_exist(self):
+        """
+        存在しないユーザ検索
+        """
+        self.register_user()
 
         # no result
         with pytest.raises(HTTPError) as ei:
@@ -77,14 +90,15 @@ class TestUser(object):
         e = ei.value
         assert e.response.status_code == 404
 
-    def test_login_logout(self):
+    @pytest.mark.parametrize('username,email', [("user1", None), (None, "user1@example.com")])
+    def test_login(self, username, email):
         """
         正常ログイン
         """
         u = self.register_user()
         assert self.service.session_token is None
 
-        res = baas.User.login(self.service, username=u.username, password=u.password)
+        res = baas.User.login(self.service, username=username, email=email, password=u.password)
         assert res["username"] == "user1"
 
         assert self.service.session_token is not None
@@ -105,7 +119,7 @@ class TestUser(object):
 
     def test_logout(self):
         """
-        正常ログアウト
+        正常ログアウト / 二重ログアウト
         """
         u = self.register_user()
         baas.User.login(self.service, username=u.username, password=u.password)

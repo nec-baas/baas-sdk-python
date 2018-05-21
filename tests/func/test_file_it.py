@@ -14,7 +14,7 @@ class TestFileStorage(TestStorageBase):
         b = baas.FileBucket(self.service, "bucket1")
 
         # upload
-        data = "12345".encode()
+        data = "abcde".encode()
         meta = b.upload("file1.txt", data=data, content_type="plain/text")
         assert meta["filename"] == "file1.txt"
         assert meta["length"] == 5
@@ -23,4 +23,10 @@ class TestFileStorage(TestStorageBase):
         # download
         res = b.download("file1.txt")
         assert res.status_code == 200
-        assert res.text == "12345"
+        assert res.text == "abcde"
+
+        # stream download
+        with b.download("file1.txt", stream=True) as res:
+            assert res.status_code == 200
+            data = res.raw.read()
+            assert data.decode() == "abcde"
