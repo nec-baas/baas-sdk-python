@@ -48,6 +48,30 @@ class ObjectBucket(object):
         res = self._query(where=where, order=order, skip=skip, limit=limit, projection=projection)
         return res["results"]
 
+    def query_with_count(self, where=None, order=None, skip=0, limit=None, projection=None):
+        # type: (dict, str, int, int, dict) -> (list, int)
+        """
+        Query objects in this bucket (with count query).
+
+        Examples:
+            ::
+
+                (results, count) = bucket.query(where={"product_name": "orange"}, order="-updatedAt", limit=100)
+
+        Args:
+            where (dict): Query conditions (JSON)
+            order (str): Sort conditions
+            skip (int): Skip count
+            limit (int): Limit count
+            projection (dict): Projection (JSON)
+
+        Returns:
+            list: List of JSON objects
+            count: Total count of query
+        """
+        res = self._query(where=where, order=order, skip=skip, limit=limit, projection=projection, count=True)
+        return res["results"], res["count"]
+
     def _query(self, where=None, order=None, skip=0, limit=None, projection=None, count=False):
         """
         Query objects (internal).

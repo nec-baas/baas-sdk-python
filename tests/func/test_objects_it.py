@@ -25,6 +25,11 @@ class TestObjectStorage(TestStorageBase):
         assert len(results) == 1
         assert results[0]["key1"] == 23456
 
+        # query with count
+        (results, count) = b.query_with_count()
+        assert len(results) == 1
+        assert count == 1
+
         # remove
         _id = results[0]["_id"]
         res = b.remove(_id)
