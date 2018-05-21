@@ -78,17 +78,45 @@ class TestUser(object):
         assert e.response.status_code == 404
 
     def test_login_logout(self):
+        """
+        正常ログイン
+        """
         u = self.register_user()
         assert self.service.session_token is None
 
-        res = baas.User.login(self.service,username=u.username, password=u.password)
-        #print(res)
+        res = baas.User.login(self.service, username=u.username, password=u.password)
+        assert res["username"] == "user1"
 
         assert self.service.session_token is not None
         assert self.service.session_token_expire is not None
 
         res = baas.User.logout(self.service)
+
+    def test_login_bad_password(self):
+        """
+        パスワード不正ログイン: 401 Unauthorized となること
+        """
+        u = self.register_user()
+
+        with pytest.raises(HTTPError) as ei:
+            baas.User.login(self.service, username=u.username, password="BAD_PASS")
+        e = ei.value
+        assert e.response.status_code == 401
+
+    def test_logout(self):
+        """
+        正常ログアウト
+        """
+        u = self.register_user()
+        baas.User.login(self.service, username=u.username, password=u.password)
+
+        # 正常にログアウトできること
+        baas.User.logout(self.service)
         assert self.service.session_token is None
         assert self.service.session_token_expire is None
 
-
+        # 二重ログアウトは 401 になること
+        with pytest.raises(HTTPError) as ei:
+            baas.User.logout(self.service)
+        e = ei.value
+        assert e.response.status_code == 401
