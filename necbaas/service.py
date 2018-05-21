@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import logging
+import copy
 from requests import Response
 
 
@@ -116,6 +117,8 @@ class Service(object):
         # headers
         if headers is None:
             headers = {}
+        else:
+            headers = copy.copy(headers)  # shallow copy, do not change original
         args["headers"] = headers
 
         headers["X-Application-Id"] = self.param["appId"]
