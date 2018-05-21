@@ -1,4 +1,5 @@
 import requests
+import pytest
 from requests.exceptions import HTTPError
 
 import necbaas as baas
@@ -26,6 +27,11 @@ class TestUser(object):
         return u
 
     def test_register(self):
+        """
+        ユーザ登録テスト(register)
+        - 正常登録できること
+        - ユーザ重複時に 409 エラーになること
+        """
         u = baas.User(self.service)
         u.username = "user1"
         u.email = "user1@example.com"
@@ -35,13 +41,20 @@ class TestUser(object):
         res = u.register()
         print(res)
 
-        try:
+        with pytest.raises(HTTPError) as ei:
             u.register()
-        except HTTPError as e:
-            s = e.response.status_code
-            assert s == 409
+        e = ei.value
+        s = e.response.status_code
+        assert s == 409
 
     def test_query(self):
+        """
+        ユーザ検索テスト
+        - 全件検索
+        - ユーザ名指定検索
+        - email指定検索
+        - ユーザ存在しない
+        """
         self.register_user()
 
         # query all
@@ -59,10 +72,10 @@ class TestUser(object):
         assert users[0]["username"] == "user1"
 
         # no result
-        try:
+        with pytest.raises(HTTPError) as ei:
             baas.User.query(self.masterService, username="no_such_user")
-        except HTTPError as e:
-            assert e.response.status_code == 404
+        e = ei.value
+        assert e.response.status_code == 404
 
     def test_login_logout(self):
         u = self.register_user()
