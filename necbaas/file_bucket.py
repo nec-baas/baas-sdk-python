@@ -86,9 +86,7 @@ class FileBucket(object):
         Returns:
             dict: Response JSON
         """
-        r = self._upload(filename, data, content_type, "POST", acl=acl)
-        res = r.json()
-        return res
+        return self._upload(filename, data, content_type, "POST", acl=acl)
 
     def update(self, filename, data, content_type="application/octet-stream", meta_etag=None, file_etag=None):
         # type: (str, any, str) -> dict
@@ -111,9 +109,7 @@ class FileBucket(object):
         if file_etag is not None:
             query["fileETag"] = file_etag
 
-        r = self._upload(filename, data, content_type, "PUT", query=query)
-        res = r.json()
-        return res
+        return self._upload(filename, data, content_type, "PUT", query=query)
 
     def _upload(self, filename, data, content_type, method, acl=None, query=None):
         # type: (str, any, str, str, dict, dict) -> Response
