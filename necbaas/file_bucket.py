@@ -112,7 +112,7 @@ class FileBucket(object):
         return self._upload(filename, data, content_type, "PUT", query=query)
 
     def _upload(self, filename, data, content_type, method, acl=None, query=None):
-        # type: (str, any, str, str, dict, dict) -> Response
+        # type: (str, any, str, str, dict, dict) -> dict
         headers = {
             "Content-Type": content_type
         }

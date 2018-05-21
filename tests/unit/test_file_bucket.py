@@ -88,7 +88,7 @@ class TestFileBucket(object):
         assert result == resp
 
         assert get_rest_args(service) == ("GET", "/files/bucket1/file1")
-        assert get_rest_kwargs(service)["stream"] == False
+        assert get_rest_kwargs(service)["stream"] is False
 
     def test_remove(self):
         """正常に削除できること"""

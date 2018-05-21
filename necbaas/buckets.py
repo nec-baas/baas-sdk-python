@@ -12,7 +12,7 @@ class Buckets(object):
     """
 
     def __init__(self, service, bucket_type):
-        # type: (Service, str) -> dict
+        # type: (Service, str) -> None
         self.service = service
         self.bucket_type = bucket_type
 
