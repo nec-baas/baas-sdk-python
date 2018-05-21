@@ -31,6 +31,7 @@ class TestUser(object):
         u.username = "user1"
         u.email = "user1@example.com"
         u.password = "pass"
+        u.options = {"realname": "Foo Bar"}
 
         u.register()
 
@@ -40,6 +41,7 @@ class TestUser(object):
         assert json["username"] == "user1"
         assert json["email"] == "user1@example.com"
         assert json["password"] == "pass"
+        assert json["options"] == {"realname": "Foo Bar"}
 
     def _mock_response_json(self, json):
         """
