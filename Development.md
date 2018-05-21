@@ -4,16 +4,16 @@
 テスト手順
 ----------
 
-テストには nose が必要です。また Python 複数バージョンテストの実施のため
+テストには pytest が必要です。また Python 複数バージョンテストの実施のため
 tox も必要です。
 
-    $ pip install nose tox
+    $ pip install pytest tox
 
 ### 単体テスト
 
 単体テストは以下手順で実施してください
 
-    $ nosetests tests/units
+    $ pytest -v tests/units
 
 ### 機能テスト
 
@@ -22,7 +22,7 @@ BaaSサーバに接続するための設定を $HOME/.baas/python_test_config.ya
 
 機能テストは以下手順で実施してください
 
-    $ nosetests tests/func
+    $ pytest -v tests/func
 
 ### 複数バージョン一括テスト
 
