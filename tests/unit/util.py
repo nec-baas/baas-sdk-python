@@ -19,6 +19,21 @@ def mock_service_json_resp(json):
     return service
 
 
+def mock_service_resp(response):
+    """
+    Service mock を返す。応答をセットする。
+
+    Args:
+        response:
+
+    Returns:
+        mocked service
+    """
+    service = MagicMock()
+    service.execute_rest.return_value = response
+    return service
+
+
 def get_rest_args(service):
     """
     REST API 呼び出し引数を取得する
