@@ -1,11 +1,10 @@
-from unittest import TestCase
 from requests.exceptions import HTTPError
 
 import necbaas as baas
 from . import util
 
 
-class ObjectStorageIT(TestCase):
+class TestObjectStorage(object):
     service = None
     # type: baas.Service
     masterService = None
@@ -15,7 +14,7 @@ class ObjectStorageIT(TestCase):
     buckets = None
     # type: baas.Buckets
 
-    def setUp(self):
+    def setup(self):
         self.service = util.create_service()
         self.masterService = util.create_service(master=True)
 
@@ -37,7 +36,7 @@ class ObjectStorageIT(TestCase):
         # Create test bucket
         self.buckets.upsert("bucket1", content_acl={"r": ["g:authenticated"], "w": ["g:authenticated"]})
 
-    def tearDown(self):
+    def teardown(self):
         try:
             self.buckets.remove("bucket1")
         except HTTPError:
@@ -59,23 +58,23 @@ class ObjectStorageIT(TestCase):
 
         # insert
         res = b.insert({"key1": 12345})
-        self.assertEqual(res["key1"], 12345)
+        assert res["key1"] == 12345
 
         # update
         res = b.update(res["_id"], {"key1": 23456}, etag=res["etag"])
-        self.assertEqual(res["key1"], 23456)
+        assert res["key1"] == 23456
 
         # query
         results = b.query(where={"key1": 23456})
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0]["key1"], 23456)
+        assert len(results) == 1
+        assert results[0]["key1"] == 23456
 
         # remove
         _id = results[0]["_id"]
         res = b.remove(_id)
-        self.assertEqual(res["_id"], _id)
+        assert res["_id"] == _id
 
         # remove with query
         res = b.remove_with_query({})
-        self.assertEqual(res["result"], "ok")
-        self.assertEqual(res["deletedObjects"], 0)
+        assert res["result"] == "ok"
+        assert res["deletedObjects"] == 0

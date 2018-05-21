@@ -8,6 +8,7 @@ requires = [
 ]
 
 test_requires = [
+    'pytest',
     'nose',
     'mock',
     'pyyaml',
