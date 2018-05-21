@@ -118,28 +118,31 @@ class ObjectBucket(object):
         res = r.json()
         return res
 
-    def remove(self, oid):
+    def remove(self, oid, soft_delete=True):
         # type: (str) -> dict
         """
         Remove one JSON Object
 
         Args:
             oid (str): Object ID
+            soft_delete (bool): Soft delete (default=true)
 
         Returns:
             dict: Response JSON
         """
-        r = self.service.execute_rest("DELETE", "/objects/{}/{}".format(self.bucket_name, oid), query={"deleteMark": 1})
+        r = self.service.execute_rest("DELETE", "/objects/{}/{}".format(self.bucket_name, oid),
+                                      query={"deleteMark": 1 if soft_delete else 0})
         res = r.json()
         return res
 
-    def remove_with_query(self, where=None):
+    def remove_with_query(self, where=None, soft_delete=True):
         # type: (dict) -> dict
         """
         Remove multiple JSON Objects
 
         Args:
             where (dict): Query condition
+            soft_delete (bool): Soft delete (default=True)
 
         Returns:
             dict: Response JSON
@@ -149,7 +152,7 @@ class ObjectBucket(object):
 
         query_params = {
             "where": json.dumps(where),
-            "deleteMark": 1
+            "deleteMark": 1 if soft_delete else 0
         }
         
         r = self.service.execute_rest("DELETE", "/objects/{}".format(self.bucket_name), query=query_params)
