@@ -17,3 +17,29 @@ def mock_service_json_resp(json):
     service = MagicMock()
     service.execute_rest.return_value = response
     return service
+
+
+def get_rest_args(service):
+    """
+    REST API 呼び出し引数を取得する
+
+    Args:
+        service:
+
+    Returns:
+
+    """
+    return service.execute_rest.call_args[0]
+
+
+def get_rest_kwargs(service):
+    """
+    REST API 呼び出しキーワード引数を取得する
+
+    Args:
+        service:
+
+    Returns:
+
+    """
+    return service.execute_rest.call_args[1]

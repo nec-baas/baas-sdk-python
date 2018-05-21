@@ -4,7 +4,7 @@ import pytest
 
 import necbaas as baas
 
-from .util import mock_service_json_resp
+from .util import *
 
 
 class TestObjectBucket(object):
@@ -27,8 +27,8 @@ class TestObjectBucket(object):
         results = bucket.query(where=where, order=order, skip=skip, limit=limit, projection=projection)
         assert results == expected_results
 
-        assert service.execute_rest.call_args[0] == ("GET", "/objects/bucket1")
-        query = service.execute_rest.call_args[1]["query"]
+        assert get_rest_args(service) == ("GET", "/objects/bucket1")
+        query = get_rest_kwargs(service)["query"]
         assert query["where"] == json.dumps(where)
         assert query["order"] == order
         assert query["skip"] == skip
@@ -44,8 +44,8 @@ class TestObjectBucket(object):
         result = bucket.insert(data)
         assert result == expected_result
 
-        assert service.execute_rest.call_args[0] == ("POST", "/objects/bucket1")
-        req_json = service.execute_rest.call_args[1]["json"]
+        assert get_rest_args(service) == ("POST", "/objects/bucket1")
+        req_json = get_rest_kwargs(service)["json"]
         assert req_json == data
 
     def test_update(self):
@@ -57,8 +57,8 @@ class TestObjectBucket(object):
         result = bucket.update("oid1", data, "etag1")
         assert result == expected_result
 
-        assert service.execute_rest.call_args[0] == ("PUT", "/objects/bucket1/oid1")
-        kwargs = service.execute_rest.call_args[1]
+        assert get_rest_args(service) == ("PUT", "/objects/bucket1/oid1")
+        kwargs = get_rest_kwargs(service)
         assert kwargs["json"] == data
         assert kwargs["query"]["etag"] == "etag1"
 
@@ -70,8 +70,8 @@ class TestObjectBucket(object):
         result = bucket.remove("oid1")
         assert result == expected_result
 
-        assert service.execute_rest.call_args[0] == ("DELETE", "/objects/bucket1/oid1")
-        assert service.execute_rest.call_args[1]["query"] == {"deleteMark": 1}
+        assert get_rest_args(service) == ("DELETE", "/objects/bucket1/oid1")
+        assert get_rest_kwargs(service)["query"] == {"deleteMark": 1}
 
     def test_remove_with_query(self):
         """正常に削除できること"""
@@ -82,7 +82,7 @@ class TestObjectBucket(object):
         result = bucket.remove_with_query(where=where)
         assert result == expected_result
 
-        assert service.execute_rest.call_args[0] == ("DELETE", "/objects/bucket1")
-        query = service.execute_rest.call_args[1]["query"]
+        assert get_rest_args(service) == ("DELETE", "/objects/bucket1")
+        query = get_rest_kwargs(service)["query"]
         assert query["where"] == json.dumps(where)
         assert query["deleteMark"] == 1

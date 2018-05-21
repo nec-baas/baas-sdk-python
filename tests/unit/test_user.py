@@ -3,7 +3,7 @@ import pytest
 
 import necbaas as baas
 
-from .util import mock_service_json_resp
+from .util import *
 
 
 class TestUser(object):
@@ -54,7 +54,7 @@ class TestUser(object):
         assert service.session_token == "TOKEN"
         assert service.session_token_expire == 12345
 
-        json = service.execute_rest.call_args[1]["json"]
+        json = get_rest_kwargs(service)["json"]
         assert json == {"username": "user1", "password": "pass1"}
 
     def test_login_email(self):
@@ -66,7 +66,7 @@ class TestUser(object):
         assert service.session_token == "TOKEN"
         assert service.session_token_expire == 12345
 
-        json = service.execute_rest.call_args[1]["json"]
+        json = get_rest_kwargs(service)["json"]
         assert json == {"email": "user1@example.com", "password": "pass1"}
 
     def test_login_no_passwd_params(self):
@@ -90,7 +90,7 @@ class TestUser(object):
         assert service.session_token is None
         assert service.session_token_expire is None
 
-        args = service.execute_rest.call_args[0]
+        args = get_rest_args(service)
         assert args == ("DELETE", "/login")
 
     def test_query(self):
@@ -101,8 +101,8 @@ class TestUser(object):
         results = baas.User.query(service, username="user1", email="user1@example.com")
         assert results == expected
 
-        assert service.execute_rest.call_args[0] == ("GET", "/users")
-        query = service.execute_rest.call_args[1]["query"]
+        assert get_rest_args(service) == ("GET", "/users")
+        query = get_rest_kwargs(service)["query"]
         assert query == {"username": "user1", "email": "user1@example.com"}
 
     def test_remove(self):
@@ -112,4 +112,4 @@ class TestUser(object):
         result = baas.User.remove(service, "user01")
         assert result == {"_id": "user01"}
 
-        assert service.execute_rest.call_args[0] == ("DELETE", "/users/user01")
+        assert get_rest_args(service) == ("DELETE", "/users/user01")
