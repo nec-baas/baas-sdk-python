@@ -11,7 +11,7 @@ from config import CONFIG
 service = baas.Service(CONFIG);
 
 # login test
-res = baas.User.login_with_username(service, "user1", "Passw0rD")
+res = baas.User.login(service, username="user1", password="Passw0rD")
 print("login result:", res)
 
 print()
