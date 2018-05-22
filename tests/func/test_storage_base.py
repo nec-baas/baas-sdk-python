@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from requests.exceptions import HTTPError
 
 import necbaas as baas

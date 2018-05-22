@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import pytest
 from requests import HTTPError

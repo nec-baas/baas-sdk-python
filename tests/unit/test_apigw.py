@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import necbaas as baas
 
 from .util import *
