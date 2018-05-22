@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
+import logging
 from requests import HTTPError
 
 import necbaas as baas
