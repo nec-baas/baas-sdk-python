@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import pytest
 import logging
 from requests import HTTPError
@@ -25,5 +26,7 @@ class TestApigw(object):
 
         with pytest.raises(HTTPError) as ei:
             apigw.execute()
-        status_code = ei.value.response.status_code
-        assert status_code == 404
+        resp = ei.value.response
+        assert resp.status_code == 404
+        j = json.loads(resp.text)
+        assert j["error"] == "No such API"

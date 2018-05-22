@@ -59,7 +59,7 @@ class Apigw(object):
         Returns:
             Response: Response of 'requests' library.
         """
-        path = self.apiname
+        path = "api/" + self.apiname
         if self.subpath is not None:
             path = path + "/" + self.subpath
         return self.service.execute_rest(self.method, path, query=query, data=data, json=json, headers=headers)

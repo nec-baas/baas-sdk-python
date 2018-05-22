@@ -18,7 +18,7 @@ class TestApigw(object):
         result = apigw.execute(json=json, query=query, headers=headers).json()
         assert result == expected_result
 
-        assert get_rest_args(service) == ("POST", "api1/a/b/c")
+        assert get_rest_args(service) == ("POST", "api/api1/a/b/c")
         kwargs = get_rest_kwargs(service)
         assert kwargs["json"] == json
         assert kwargs["query"] == query
