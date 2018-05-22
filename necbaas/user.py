@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+User module
+"""
 from .service import Service
 
 
@@ -26,12 +29,13 @@ class User(object):
 
     @staticmethod
     def login(service, username=None, email=None, password=None, params=None):
-        # type: (Service, dict) -> dict
+        # type: (Service, str, str, str, dict) -> dict
         """
         Login
 
         Example:
             ::
+
                 # login with username
                 result = necbaas.User.login(service, username="user1", password="Passw0rD")
 
@@ -46,11 +50,11 @@ class User(object):
 
         Args:
             service (Service): Service
-            username (str): User name
-            email (str): E-mail
-            password (str): Password
+            username (str): User name (mandatory, if both email/params is not specified)
+            email (str): E-mail (mandatory, if both username/params is not specified)
+            password (str): Password (mandatory, if params is not specified)
             params (dict): dictionary. The parameter is encoded in JSON and sent to server.
-                Usually contains username or email, and password.
+                Usually contains username or email, and password. (optional)
 
         Returns:
             dict: Response JSON

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+BaaS access service module
+"""
 import requests
 import logging
 import copy

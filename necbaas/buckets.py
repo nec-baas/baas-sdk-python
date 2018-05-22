@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Bucket manager module
+"""
 from .service import Service
 
 

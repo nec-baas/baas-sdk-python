@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+JSON Object bucket module
+"""
 import json
 from .service import Service
 
@@ -66,8 +69,7 @@ class ObjectBucket(object):
             projection (dict): Projection (JSON)
 
         Returns:
-            list: List of JSON objects
-            count: Total count of query
+            (list, count): Tuple of list of JSON objects and total count of query.
         """
         res = self._query(where=where, order=order, skip=skip, limit=limit, projection=projection, count=True)
         return res["results"], res["count"]

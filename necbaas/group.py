@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Group module
+"""
 from .service import Service
 
 

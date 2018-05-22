@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+File bucket module
+"""
 import json
 from .service import Service
 from requests import Response
