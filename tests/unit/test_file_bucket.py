@@ -28,7 +28,7 @@ class TestFileBucket(object):
         result = bucket.get_metadata("file1")
         assert result == expected_result
 
-        assert get_rest_args(service) == ("GET", "/files/bucket1/file1")
+        assert get_rest_args(service) == ("GET", "/files/bucket1/file1/meta")
 
     def test_update_metadata(self):
         """正常にメタデータ更新できること"""
@@ -39,7 +39,7 @@ class TestFileBucket(object):
         result = bucket.update_metadata("file1", meta, etag="etag1")
         assert result == expected_result
 
-        assert get_rest_args(service) == ("PUT", "/files/bucket1/file1")
+        assert get_rest_args(service) == ("PUT", "/files/bucket1/file1/meta")
         kwargs = get_rest_kwargs(service)
         assert kwargs["json"] == meta
         assert kwargs["query"] == {"metaETag": "etag1"}
