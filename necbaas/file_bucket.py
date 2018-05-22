@@ -65,7 +65,8 @@ class FileBucket(object):
         if etag is not None:
             query = {"metaETag": etag}
 
-        r = self.service.execute_rest("PUT", "/files/{}/{}/meta".format(self.bucket_name, filename), json=meta, query=query)
+        r = self.service.execute_rest("PUT", "/files/{}/{}/meta".format(self.bucket_name, filename),
+                                      json=meta, query=query)
         res = r.json()
         return res
 
