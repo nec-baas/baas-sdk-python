@@ -170,7 +170,7 @@ class FileBucket(object):
             filename (str): Filename
 
         Returns:
-            dict: Response JSON
+            dict: Response JSON (empty JSON)
         """
         r = self.service.execute_rest("DELETE", self._get_file_path(filename))
         res = r.json()
