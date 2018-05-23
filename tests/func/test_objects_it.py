@@ -43,7 +43,7 @@ class TestObjectStorage(TestStorageBase):
         # remove
         _id = results[0]["_id"]
         res = b.remove(_id)
-        assert res["_id"] == _id
+        assert len(res) == 0
 
         # remove with query
         res = b.remove_with_query({})
@@ -102,14 +102,17 @@ class TestObjectStorage(TestStorageBase):
             status_code = ei.value.response.status_code
             assert status_code == 409
 
-    @pytest.mark.parametrize("soft_delete", [True, False])
+    @pytest.mark.parametrize("soft_delete", [None, True, False])
     def test_remove(self, soft_delete):
         """正常に削除できること"""
         b = self.insert_sample_data(1)
         objs = b.query()
 
         oid = objs[0]["_id"]
-        res = b.remove(oid, soft_delete=soft_delete)
+        if soft_delete is None:
+            res = b.remove(oid)
+        else:
+            res = b.remove(oid, soft_delete=soft_delete)
 
         if soft_delete:
             assert res["_deleted"] == soft_delete

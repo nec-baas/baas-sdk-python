@@ -72,7 +72,7 @@ class TestObjectBucket(object):
         assert result == expected_result
 
         assert get_rest_args(service) == ("DELETE", "/objects/bucket1/oid1")
-        assert get_rest_kwargs(service)["query"] == {"deleteMark": 1}
+        assert get_rest_kwargs(service)["query"] == {"deleteMark": 0}
 
     def test_remove_with_query(self):
         """正常に削除できること"""
@@ -86,4 +86,4 @@ class TestObjectBucket(object):
         assert get_rest_args(service) == ("DELETE", "/objects/bucket1")
         query = get_rest_kwargs(service)["query"]
         assert query["where"] == json.dumps(where)
-        assert query["deleteMark"] == 1
+        assert query["deleteMark"] == 0

@@ -150,14 +150,14 @@ class ObjectBucket(object):
         res = r.json()
         return res
 
-    def remove(self, oid, soft_delete=True):
+    def remove(self, oid, soft_delete=False):
         # type: (str) -> dict
         """
         Remove one JSON Object
 
         Args:
             oid (str): Object ID
-            soft_delete (bool): Soft delete (optional, default=True)
+            soft_delete (bool): Soft delete (optional, default=False)
 
         Returns:
             dict: Response JSON
@@ -167,14 +167,14 @@ class ObjectBucket(object):
         res = r.json()
         return res
 
-    def remove_with_query(self, where=None, soft_delete=True):
+    def remove_with_query(self, where=None, soft_delete=False):
         # type: (dict) -> dict
         """
         Remove multiple JSON Objects
 
         Args:
             where (dict): Query condition (optional)
-            soft_delete (bool): Soft delete (optional, default=True)
+            soft_delete (bool): Soft delete (optional, default=False)
 
         Returns:
             dict: Response JSON
@@ -191,7 +191,7 @@ class ObjectBucket(object):
         res = r.json()
         return res
 
-    def batch(self, requests, soft_delete=True):
+    def batch(self, requests, soft_delete=False):
         # type: (list) -> list
         """
         Batch operation
@@ -206,7 +206,7 @@ class ObjectBucket(object):
 
         Args:
             requests (list): List of batch requests
-            soft_delete (bool): Soft delete (optional, default=True)
+            soft_delete (bool): Soft delete (optional, default=False)
 
         Returns:
             list: List of batch results
