@@ -112,6 +112,12 @@ class ObjectBucket(object):
         """
         Insert JSON Object
 
+        Examples:
+            ::
+
+                acl = {"r": ["g:authenticated"], "w": ["g:authenticated"]}
+                result = bucket.insert({"name": "foo", "score": 70, "ACL": acl})
+
         Args:
             data (dict): Data (JSON)
 
@@ -189,6 +195,14 @@ class ObjectBucket(object):
         # type: (list) -> list
         """
         Batch operation
+
+        Examples:
+            ::
+                requests = [
+                    {"op": "insert", "data": {"name": "foo", "score": 70}},
+                    {"op": "insert", "data": {"name": "bar", "score": 80}}
+                ]
+                results = bucket.batch(requests)
 
         Args:
             requests (list): List of batch requests

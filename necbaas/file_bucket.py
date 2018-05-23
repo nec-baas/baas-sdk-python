@@ -79,7 +79,7 @@ class FileBucket(object):
             ::
 
                 with open("/data/data1.dat", "rb") as f:
-                    bucket.upload("data1.dat", f, acl={"r": "g:anonymous"})
+                    bucket.upload("data1.dat", f, acl={"r": ["g:anonymous"]})
 
         Args:
             filename (str): Filename
