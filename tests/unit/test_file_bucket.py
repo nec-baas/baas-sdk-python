@@ -51,7 +51,7 @@ class TestFileBucket(object):
         service, bucket = self.get_bucket(expected_result)
 
         data = "TEST DATA".encode()
-        acl = {"r": "g:anonymous"}
+        acl = {"r": ["g:anonymous"]}
         result = bucket.upload("file1", data, acl=acl)
         assert result == expected_result
 
