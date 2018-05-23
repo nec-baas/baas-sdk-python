@@ -2,7 +2,7 @@
 import time
 from requests import HTTPError
 import necbaas as baas
-from func import util
+from tests.func import util
 
 
 #@pytest.mark.skip(reason="manual test")
