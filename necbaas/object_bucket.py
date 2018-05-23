@@ -39,11 +39,11 @@ class ObjectBucket(object):
                 results = bucket.query(where={"product_name": "orange"}, order="-updatedAt", limit=100)
 
         Args:
-            where (dict): Query conditions (JSON)
-            order (str): Sort conditions
-            skip (int): Skip count
-            limit (int): Limit count
-            projection (dict): Projection (JSON)
+            where (dict): Query conditions (JSON) (optional)
+            order (str): Sort conditions (optional)
+            skip (int): Skip count (optional)
+            limit (int): Limit count (optional)
+            projection (dict): Projection (JSON) (optional)
 
         Returns:
             list: List of JSON objects
@@ -62,11 +62,11 @@ class ObjectBucket(object):
                 (results, count) = bucket.query(where={"product_name": "orange"}, order="-updatedAt", limit=100)
 
         Args:
-            where (dict): Query conditions (JSON)
-            order (str): Sort conditions
-            skip (int): Skip count
-            limit (int): Limit count
-            projection (dict): Projection (JSON)
+            where (dict): Query conditions (JSON) (optional)
+            order (str): Sort conditions (optional)
+            skip (int): Skip count (optional)
+            limit (int): Limit count (optional)
+            projection (dict): Projection (JSON) (optional)
 
         Returns:
             (list, count): Tuple of list of JSON objects and total count of query.
@@ -79,12 +79,12 @@ class ObjectBucket(object):
         Query objects (internal).
 
         Args:
-            where (dict): Query conditions (JSON)
-            order (str): Sort conditions
-            skip (int): Skip count
-            limit (int): Limit count
-            projection (dict): Projection (JSON)
-            count (bool): Get total count
+            where (dict): Query conditions (JSON) (optional)
+            order (str): Sort conditions (optional)
+            skip (int): Skip count (optional)
+            limit (int): Limit count (optional)
+            projection (dict): Projection (JSON) (optional)
+            count (bool): Get total count (optional)
 
         Returns:
             dict: Response in JSON
@@ -136,7 +136,7 @@ class ObjectBucket(object):
         Args:
             oid (str): ID of Object
             data (dict): Data (JSON)
-            etag (str): ETag
+            etag (str): ETag (optional)
 
         Returns:
             dict: Response JSON
@@ -157,7 +157,7 @@ class ObjectBucket(object):
 
         Args:
             oid (str): Object ID
-            soft_delete (bool): Soft delete (default=true)
+            soft_delete (bool): Soft delete (optional, default=True)
 
         Returns:
             dict: Response JSON
@@ -173,8 +173,8 @@ class ObjectBucket(object):
         Remove multiple JSON Objects
 
         Args:
-            where (dict): Query condition
-            soft_delete (bool): Soft delete (default=True)
+            where (dict): Query condition (optional)
+            soft_delete (bool): Soft delete (optional, default=True)
 
         Returns:
             dict: Response JSON
@@ -206,7 +206,7 @@ class ObjectBucket(object):
 
         Args:
             requests (list): List of batch requests
-            soft_delete (bool): Soft delete (default=True)
+            soft_delete (bool): Soft delete (optional, default=True)
 
         Returns:
             list: List of batch results
@@ -215,6 +215,7 @@ class ObjectBucket(object):
         body_json = {
             "requests": requests
         }
-        r = self.service.execute_rest("POST", "/objects/{}/_batch".format(self.bucket_name), json=body_json, query=query)
+        r = self.service.execute_rest("POST", "/objects/{}/_batch".format(self.bucket_name),
+                                      json=body_json, query=query)
         res = r.json()
         return res["results"]

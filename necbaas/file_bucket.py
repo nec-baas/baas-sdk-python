@@ -85,7 +85,7 @@ class FileBucket(object):
             filename (str): Filename
             data (any): File data in bytes or file-like object.
             content_type (str): Content-Type (default=application/octet-stream)
-            acl (dict): ACL (default=None)
+            acl (dict): ACL (optional)
 
         Returns:
             dict: Response JSON
@@ -101,8 +101,8 @@ class FileBucket(object):
             filename (str): File name
             data (any): File data in bytes or file-like object.
             content_type (str): Content-Type
-            meta_etag (str): File metadata ETag
-            file_etag (str): File body ETag
+            meta_etag (str): File metadata ETag (optional)
+            file_etag (str): File body ETag (optional)
 
         Returns:
             dict: Response JSON
@@ -154,7 +154,7 @@ class FileBucket(object):
 
         Args:
             filename (str): Filename
-            stream (bool): Stream flag
+            stream (bool): Stream flag (optional, default=False)
 
         Returns:
             Response: Response (requests library)

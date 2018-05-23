@@ -51,10 +51,10 @@ class Apigw(object):
                 json = res.json()  # response body of JSON as dict
 
         Args:
-            data (any): Request body, in bytes or file-like object. This overrides 'json' argument.
-            json (dict): Request body of JSON.
-            query (dict): Query parameters.
-            headers (dict): Headers.
+            data (any): Request body, in bytes or file-like object. This overrides 'json' argument. (optional)
+            json (dict): Request body of JSON. (optional)
+            query (dict): Query parameters. (optional)
+            headers (dict): Headers. (optional)
 
         Returns:
             Response: Response of 'requests' library.

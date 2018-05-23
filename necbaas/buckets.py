@@ -29,9 +29,9 @@ class Buckets(object):
         
         Args:
             name (str): Bucket name
-            desc (str): Description
-            acl (dict): Bucket ACL
-            content_acl (dict): Content ACL
+            desc (str): Description (mandatory for update)
+            acl (dict): Bucket ACL (mandatory for update)
+            content_acl (dict): Content ACL (mandatory for update)
 
         Returns:
             dict: Response JSON

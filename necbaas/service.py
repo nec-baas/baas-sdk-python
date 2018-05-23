@@ -153,8 +153,8 @@ class Service(object):
         return self._do_request(method, **args)
 
     def _do_request(self, method, **kwargs):
-        self.logger.debug("HTTP request: method=%s, url=%s", method, kwargs["url"])
         # type: (str, **dict) -> Response
+        self.logger.debug("HTTP request: method=%s, url=%s", method, kwargs["url"])
         method = method.upper()
         if method == 'GET':
             res = requests.get(**kwargs)
