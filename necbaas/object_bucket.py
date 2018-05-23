@@ -184,3 +184,23 @@ class ObjectBucket(object):
         r = self.service.execute_rest("DELETE", "/objects/{}".format(self.bucket_name), query=query_params)
         res = r.json()
         return res
+
+    def batch(self, requests, soft_delete=True):
+        # type: (list) -> list
+        """
+        Batch operation
+
+        Args:
+            requests (list): List of batch requests
+            soft_delete (bool): Soft delete (default=True)
+
+        Returns:
+            list: List of batch results
+        """
+        query = {"deleteMark": 1 if soft_delete else 0}
+        body_json = {
+            "requests": requests
+        }
+        r = self.service.execute_rest("POST", "/objects/{}/_batch".format(self.bucket_name), json=body_json, query=query)
+        res = r.json()
+        return res["results"]
