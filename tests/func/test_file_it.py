@@ -32,23 +32,25 @@ class TestFileStorage(TestStorageBase):
         return b, test_data, meta
 
     def test_upload(self):
-        """正常にuploadできること"""
+        """正常にuploadできること。日本語ファイル名も使用できること。"""
         b = baas.FileBucket(self.service, "bucket1")
+
+        filename = "日本語.txt"
 
         # upload
         test_data = self.create_test_data(1024)
-        meta = b.create("file1.txt", data=test_data.encode(), content_type="plain/text")
-        assert meta["filename"] == "file1.txt"
+        meta = b.create(filename, data=test_data.encode(), content_type="plain/text")
+        assert meta["filename"] == filename
         assert meta["length"] == len(test_data)
         assert meta["contentType"] == "plain/text"
 
         # download
-        res = b.download("file1.txt")
+        res = b.download(filename)
         assert res.status_code == 200
         assert res.text == test_data
 
         # stream download
-        with b.download("file1.txt", stream=True) as res:
+        with b.download(filename, stream=True) as res:
             assert res.status_code == 200
             data = res.raw.read()
             assert data.decode() == test_data

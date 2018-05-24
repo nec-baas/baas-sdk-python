@@ -24,7 +24,7 @@ class TestObjectStorage(TestStorageBase):
         return b
 
     def test_crud(self):
-        """追加・更新・クエリ・削除が実行できること"""
+        """追加・更新・クエリ・削除が実行できること。URLエンコードも正常に行われること"""
         b = baas.ObjectBucket(self.service, "bucket1")
 
         # insert
@@ -32,13 +32,13 @@ class TestObjectStorage(TestStorageBase):
         assert res["key1"] == 12345
 
         # update
-        res = b.update(res["_id"], {"key1": 23456}, etag=res["etag"])
-        assert res["key1"] == 23456
+        res = b.update(res["_id"], {"key1": "あいうえお"}, etag=res["etag"])
+        assert res["key1"] == "あいうえお"
 
         # query
-        results = b.query(where={"key1": 23456})
+        results = b.query(where={"key1": "あいうえお"})
         assert len(results) == 1
-        assert results[0]["key1"] == 23456
+        assert results[0]["key1"] == "あいうえお"
 
         # remove
         _id = results[0]["_id"]
