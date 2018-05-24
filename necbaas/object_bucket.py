@@ -162,6 +162,8 @@ class ObjectBucket(object):
         Returns:
             dict: Response JSON
         """
+        if not oid:  # fail-safe: check not None nor empty to avoid remove all objects.
+            raise ValueError("No oid")
         r = self.service.execute_rest("DELETE", "/objects/{}/{}".format(self.bucket_name, oid),
                                       query={"deleteMark": 1 if soft_delete else 0})
         res = r.json()
