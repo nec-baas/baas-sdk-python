@@ -70,10 +70,11 @@ class FileBucket(object):
         res = r.json()
         return res
 
-    def upload(self, filename, data, content_type="application/octet-stream", acl=None):
+    def create(self, filename, data, content_type="application/octet-stream", acl=None):
         # type: (str, any, str, dict) -> dict
         """
-        Upload file.
+        Upload and create new file.
+        To replace existing file, use 'update()'.
 
         Example:
             ::
@@ -95,7 +96,7 @@ class FileBucket(object):
     def update(self, filename, data, content_type="application/octet-stream", meta_etag=None, file_etag=None):
         # type: (str, any, str) -> dict
         """
-        Update file body.
+        Update and replace file body.
 
         Args:
             filename (str): File name

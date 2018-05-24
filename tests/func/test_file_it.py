@@ -28,7 +28,7 @@ class TestFileStorage(TestStorageBase):
         # type: () -> (baas.FileBucket, str, dict)
         b = baas.FileBucket(self.service, "bucket1")
         test_data = self.create_test_data(64)
-        meta = b.upload("file1.txt", data=test_data.encode(), content_type="plain/text")
+        meta = b.create("file1.txt", data=test_data.encode(), content_type="plain/text")
         return b, test_data, meta
 
     def test_upload(self):
@@ -37,7 +37,7 @@ class TestFileStorage(TestStorageBase):
 
         # upload
         test_data = self.create_test_data(1024)
-        meta = b.upload("file1.txt", data=test_data.encode(), content_type="plain/text")
+        meta = b.create("file1.txt", data=test_data.encode(), content_type="plain/text")
         assert meta["filename"] == "file1.txt"
         assert meta["length"] == len(test_data)
         assert meta["contentType"] == "plain/text"
@@ -139,7 +139,7 @@ class TestFileStorage(TestStorageBase):
         # ファイル登録
         test_data = self.create_test_data(128)
         for i in range(5):
-            b.upload("file{}.txt".format(i), data=test_data.encode(), content_type="plain/text")
+            b.create("file{}.txt".format(i), data=test_data.encode(), content_type="plain/text")
         files = b.query()
         assert len(files) == 5
         for file in files:

@@ -52,7 +52,7 @@ class TestFileBucket(object):
 
         data = "TEST DATA".encode()
         acl = {"r": ["g:anonymous"]}
-        result = bucket.upload("file1", data, acl=acl)
+        result = bucket.create("file1", data, acl=acl)
         assert result == expected_result
 
         assert get_rest_args(service) == ("POST", "/files/bucket1/file1")

@@ -42,7 +42,7 @@ acl = {
     "w": ["g:anonymous"]
 }
 
-res = fileBucket.upload("test.txt", "TESTDATA".encode("utf-8"), "plain/text", acl=acl)
+res = fileBucket.create("test.txt", "TESTDATA".encode("utf-8"), "plain/text", acl=acl)
 #res = bucket2.update("test.txt", "TESTDATA".encode("utf-8"), "plain/text")
 print(res)
 
