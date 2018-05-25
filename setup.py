@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
+import codecs
 
 requires = [
     'requests>=2.18.0'
@@ -20,11 +21,15 @@ doc_requires = [
     'sphinx-rtd-theme'
 ]
 
+with codecs.open("Description.rst", encoding="utf-8") as fp:
+    description = fp.read()
+
 setup(
     name='necbaas',
     version='7.5.0b1',
     packages=['necbaas'],
     description='NEC Mobile Backend platform Python SDK',
+    long_description=description,
     author='NEC Corporation',
     url='http://jpn.nec.com/iot/platform/iotpfservice',
     install_requires=requires,
