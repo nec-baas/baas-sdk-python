@@ -4,16 +4,15 @@
 テスト手順
 ----------
 
-テストには pytest が必要です。また Python 複数バージョンテストの実施のため
-tox も必要です。
+テスト関連のモジュールをインストールしてください
 
-    $ pip install pytest tox
+    $ pip install .[test]
 
 ### 単体テスト
 
 単体テストは以下手順で実施してください
 
-    $ pytest -v tests/units
+    $ pytest -v tests/unit
 
 ### 機能テスト
 
@@ -33,9 +32,9 @@ Python 複数バージョン一括テストをする場合は tox を使用し�
 ドキュメント生成
 -------------
 
-Sphinx が必要です。
+ドキュメント関連のモジュールをインストールしてください
 
-    $ pip install sphinx sphinx-rtd-theme
+    $ pip install .[doc]
 
 以下手順で sphinx 関連のファイルを生成します。
 (docs ディレクトリにはすでに生成済みのため通常再実施は不要)

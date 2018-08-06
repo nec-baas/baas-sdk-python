@@ -33,12 +33,13 @@ class TestObjectStorage(TestStorageBase):
 
         # update
         res = b.update(res["_id"], {"key1": "あいうえお"}, etag=res["etag"])
-        assert res["key1"] == "あいうえお"
+        kana = "あいうえお" if type(res["key1"]) is str else u"あいうえお"
+        assert res["key1"] == kana
 
         # query
         results = b.query(where={"key1": "あいうえお"})
         assert len(results) == 1
-        assert results[0]["key1"] == "あいうえお"
+        assert results[0]["key1"] == kana
 
         # remove
         _id = results[0]["_id"]
