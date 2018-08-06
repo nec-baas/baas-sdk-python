@@ -21,8 +21,12 @@ doc_requires = [
     'sphinx-rtd-theme'
 ]
 
-with codecs.open("Description.rst", encoding="utf-8") as fp:
-    description = fp.read()
+try:
+    with codecs.open("Description.rst", encoding="utf-8") as fp:
+        description = fp.read()
+except IOError:
+    # for tox
+    description = "dummy description"
 
 setup(
     name='necbaas',
@@ -33,7 +37,7 @@ setup(
     author='NEC Corporation',
     url='http://jpn.nec.com/iot/platform/iotpfservice',
     install_requires=requires,
-    extra_requires={
+    extras_require={
         'test': test_requires,
         'doc': doc_requires
     },

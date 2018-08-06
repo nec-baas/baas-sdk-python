@@ -40,7 +40,7 @@ class TestFileStorage(TestStorageBase):
         # upload
         test_data = self.create_test_data(1024)
         meta = b.create(filename, data=test_data.encode(), content_type="plain/text")
-        assert meta["filename"] == filename
+        assert meta["filename"] == filename if type(meta["filename"]) is str else u"日本語.txt"
         assert meta["length"] == len(test_data)
         assert meta["contentType"] == "plain/text"
 
