@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from mock import patch, MagicMock
 import pytest
 
 import necbaas as baas
@@ -45,6 +44,42 @@ class TestUser(object):
         assert json["email"] == "user1@example.com"
         assert json["password"] == "pass"
         assert json["options"] == {"realname": "Foo Bar"}
+
+    def test_update(self):
+        """正常に更新できること(etagなし)"""
+        mock_service = MagicMock()
+        u = baas.User(mock_service)
+        u.username = "user2"
+        u.email = "user2@example.com"
+        u.password = "pass2"
+        u.options = {"realname": "Foo Bar 2"}
+
+        user_id = "userId"
+        u.update(user_id)
+
+        args = mock_service.execute_rest.call_args
+        assert args[0], ("PUT" == "/users/" + user_id)
+        query = args[1]["query"]
+        assert len(query) == 0
+        json = args[1]["json"]
+        assert json["username"] == "user2"
+        assert json["email"] == "user2@example.com"
+        assert json["password"] == "pass2"
+        assert json["options"] == {"realname": "Foo Bar 2"}
+
+    def test_update_etag(self):
+        """正常に更新できること(etagあり)"""
+        mock_service = MagicMock()
+        u = baas.User(mock_service)
+
+        u.update("user01", "testEtag")
+
+        args = mock_service.execute_rest.call_args
+        assert args[0], ("PUT" == "/users/user01")
+        query = args[1]["query"]
+        assert query["etag"] == "testEtag"
+        json = args[1]["json"]
+        assert len(json) == 0
 
     def test_login_username(self):
         """username で正常にログインできること"""
@@ -106,6 +141,16 @@ class TestUser(object):
         query = get_rest_kwargs(service)["query"]
         assert query == {"username": "user1", "email": "user1@example.com"}
 
+    def test_get(self):
+        """正常に取得できること"""
+        expected = {"username": "user1", "email": "user1@example.com"}
+        service = mock_service_json_resp(expected)
+
+        results = baas.User.get(service, "user01")
+        assert results == expected
+
+        assert get_rest_args(service) == ("GET", "/users/user01")
+
     def test_remove(self):
         """正常にユーザ削除できること"""
         service = mock_service_json_resp({"_id": "user01"})
@@ -114,3 +159,27 @@ class TestUser(object):
         assert result == {"_id": "user01"}
 
         assert get_rest_args(service) == ("DELETE", "/users/user01")
+
+    def test_reset_password_username(self):
+        """正常にユーザ名でパスワードリセット要求できること"""
+        expected = {}
+        service = mock_service_json_resp(expected)
+
+        results = baas.User.reset_password(service, username="user01")
+        assert results == expected
+
+        assert get_rest_args(service) == ("POST", "/request_password_reset")
+        json = get_rest_kwargs(service)["json"]
+        assert json == {"username": "user01"}
+
+    def test_reset_password_email(self):
+        """正常にEmailでパスワードリセット要求できること"""
+        expected = {}
+        service = mock_service_json_resp(expected)
+
+        results = baas.User.reset_password(service, email="user1@example.com")
+        assert results == expected
+
+        assert get_rest_args(service) == ("POST", "/request_password_reset")
+        json = get_rest_kwargs(service)["json"]
+        assert json == {"email": "user1@example.com"}

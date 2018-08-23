@@ -126,6 +126,36 @@ class User(object):
         res = r.json()
         return res
 
+    def update(self, user_id, etag=None):
+        # type: (str, str) -> dict
+        """
+        Update user.
+
+        Args:
+            user_id (str): User ID
+            etag (str): ETag (optional)
+
+        Returns:
+            dist: User info (JSON)
+        """
+        query = {}
+        if etag is not None:
+            query["etag"] = etag
+
+        body = {}
+        if self.username is not None:
+            body["username"] = self.username
+        if self.email is not None:
+            body["email"] = self.email
+        if self.password is not None:
+            body["password"] = self.password
+        if self.options is not None:
+            body["options"] = self.options
+
+        r = self.service.execute_rest("PUT", "/users/{}".format(user_id), query=query, json=body)
+        res = r.json()
+        return res
+
     @staticmethod
     def query(service, username=None, email=None):
         # type: (Service, str, str) -> list
@@ -150,6 +180,22 @@ class User(object):
         return res["results"]
 
     @staticmethod
+    def get(service, user_id):
+        # type: (Service, str) -> dict
+        """
+        Get user info.
+
+        Args:
+            service (Service): Service
+            user_id (str): User ID
+        Returns:
+            dict: User info
+        """
+        r = service.execute_rest("GET", "/users/{}".format(user_id))
+        res = r.json()
+        return res
+
+    @staticmethod
     def remove(service, user_id):
         # type: (Service, str) -> dict
         """
@@ -162,5 +208,28 @@ class User(object):
             dict: Response JSON
         """
         r = service.execute_rest("DELETE", "/users/{}".format(user_id))
+        res = r.json()
+        return res
+
+    @staticmethod
+    def reset_password(service, username=None, email=None):
+        # type: (Service, str, str) -> dict
+        """
+        Reset password.
+
+        Args:
+            service (Service): Service
+            username (str): Username (optional)
+            email (str): E-mail (optional)
+        Returns:
+            dict: Response JSON
+        """
+        body = {}
+        if username is not None:
+            body["username"] = username
+        if email is not None:
+            body["email"] = email
+
+        r = service.execute_rest("POST", "/request_password_reset", json=body)
         res = r.json()
         return res

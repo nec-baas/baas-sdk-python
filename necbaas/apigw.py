@@ -21,11 +21,13 @@ class Apigw(object):
         apiname (str): API name
         method (str): Method (GET/POST/PUT/DELETE)
         subpath (str): Sub-path (optional)
-    """
 
-    service = None
-    # type: Service
-    """Service instance"""
+    Attributes:
+        service (Service): Service
+        apiname (str): API name
+        method (str): Method (GET/POST/PUT/DELETE)
+        subpath (str): Sub-path (optional)
+    """
 
     def __init__(self, service, apiname, method, subpath=None):
         # type: (Service, str, str, str) -> None

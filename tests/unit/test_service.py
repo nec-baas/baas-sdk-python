@@ -1,8 +1,18 @@
 # -*- coding: utf-8 -*-
-from mock import patch
+from mock import patch, mock_open
 import pytest
+import json
+import yaml
+import time
+import sys
+import os
 
 import necbaas as baas
+
+# for mock of open()
+builtin = 'builtins'
+if sys.version_info[0] == 2:
+    builtin = '__builtin__'
 
 
 class TestService(object):
@@ -51,6 +61,60 @@ class TestService(object):
     def test_no_app_key(self):
         """baseUrl 指定がないときにエラーになること"""
         self._test_init_bad_sub("appKey")
+
+    def test_init_with_file(self):
+        """ファイルを使用して正常に初期化できること"""
+        config_file = "baseUrl: http://localhost/api\n" \
+            "tenantId: tenant1\n" \
+            "appId: app1\n" \
+            "appKey: key1\n" \
+            "proxy:\n" \
+            "  http: proxy.example.com:8080\n" \
+            "  https: proxy.example2.com:8080\n"
+ 
+        with patch(builtin + ".open", mock_open(read_data=config_file)):
+            service = baas.Service()
+
+        assert service.param["baseUrl"] == "http://localhost/api"
+        assert service.param["tenantId"] == "tenant1"
+        assert service.param["appId"] == "app1"
+        assert service.param["appKey"] == "key1"
+        proxy = service.param["proxy"]
+        assert proxy["http"] == "proxy.example.com:8080"
+        assert proxy["https"] == "proxy.example2.com:8080"
+
+    def test_init_file_not_found(self):
+        """設定ファイルが存在しない場合はエラーとなること"""
+        m = mock_open()
+        with patch(builtin + ".open", m) as mocked_open:
+            mocked_open.side_effect = IOError()
+            with pytest.raises(Exception):
+                baas.Service()
+
+        args_list = m.call_args_list
+        assert args_list[0][0][0] == os.path.expanduser("~/.baas/python/python_config.yaml")
+        assert args_list[1][0][0] == "/etc/baas/python/python_config.yaml"
+
+    def test_save_config(self):
+        """正常に設定情報を保存できること"""
+        param = self.get_sample_param()
+        service = baas.Service(param)
+
+        path = "/tmp/config.yaml"
+        m = mock_open()
+        with patch(builtin + ".open", m, create=True):
+            service.save_config(path)
+
+        m.assert_called_with(path, 'w', encoding='utf-8')
+        write_data = self._get_write_data(m)
+        assert param == yaml.load(write_data)
+
+    def _get_write_data(self, mock):
+        handle = mock()
+        write_string = ''
+        for args in handle.write.call_args_list:
+            write_string += args[0][0]
+        return write_string
 
     @patch("necbaas.Service._do_request")
     def test_execute_rest(self, mock):
@@ -118,8 +182,131 @@ class TestService(object):
         headers = kwargs["headers"]
         assert headers["Content-Type"] == "application/octet-stream"
 
+    def test_execute_rest_invalid_method(self):
+        """不正なメソッドはエラーとなること"""
+        service = baas.Service(self.get_sample_param())
 
+        with pytest.raises(Exception):
+            service.execute_rest("PATCH", "/a/b/c")
 
+    @patch("os.path")
+    def test_load_session_token(self, mock_path):
+        """正常にセッショントークンが load できること"""
+        mock_path.exists.return_value = True
+        session_token = '{"sessionTokenExpire": 1534847297, "sessionToken": "testToken"}'
 
+        service = baas.Service(self.get_sample_param())
 
+        with patch(builtin + ".open", mock_open(read_data=session_token)):
+            service.load_session_token()
 
+        assert service.session_token == "testToken"
+        assert service.session_token_expire == 1534847297
+
+    @patch("os.path")
+    def test_load_session_token_file_not_exists(self, mock_path):
+        """セッショントークンファイルがない場合はセッショントークンをクリアすること"""
+        mock_path.exists.return_value = False
+
+        service = baas.Service(self.get_sample_param())
+        service.session_token = "testToken"
+        service.session_token_expire = 1534847297
+
+        service.load_session_token()
+
+        assert service.session_token is None
+        assert service.session_token_expire is None
+
+    def _test_load_session_token_file_invalid(self, mock_path, session_token):
+        mock_path.exists.return_value = True
+
+        service = baas.Service(self.get_sample_param())
+
+        with patch(builtin + ".open", mock_open(read_data=session_token)):
+            with pytest.raises(Exception):
+                service.load_session_token()
+
+    @patch("os.path")
+    def test_load_session_token_file_session_token_none(self, mock_path):
+        """セッショントークンがない場合はエラーとなること"""
+        session_token = '{"sessionTokenExpire": 1534847297}'
+        self._test_load_session_token_file_invalid(mock_path, session_token)
+
+    @patch("os.path")
+    def test_load_session_token_file_session_token_expire_none(self, mock_path):
+        """セッショントークン期限がない場合はエラーとなること"""
+        session_token = '{"sessionToken": "testToken"}'
+        self._test_load_session_token_file_invalid(mock_path, session_token)
+
+    @patch("os.path")
+    @patch("os.makedirs")
+    def test_save_session_token(self, mock_mkdirs, mock_path):
+        """正常にセッショントークンが save できること"""
+        mock_path.exists.return_value = False
+        session_token = {
+            "sessionToken": "testToken",
+            "sessionTokenExpire": 1534847297}
+        expected_token = json.dumps(session_token)
+
+        service = baas.Service(self.get_sample_param())
+
+        service.session_token = "testToken"
+        service.session_token_expire = 1534847297
+
+        m = mock_open()
+        with patch(builtin + ".open", m, create=True):
+            service.save_session_token()
+
+        m.assert_called_with(baas.Service._SESSION_TOKEN_FILE_PATH, 'w')
+        assert self._get_write_data(m) == expected_token
+
+        mock_mkdirs.assert_called_once()
+
+    @patch("os.path")
+    def test_save_session_token_without_token(self, mock_path):
+        """セッショントークンがない場合はエラーとなること"""
+        mock_path.exists.return_value = True
+
+        service = baas.Service(self.get_sample_param())
+
+        service.session_token = None
+        service.session_token_expire = None
+
+        with pytest.raises(Exception):
+            service.save_session_token()
+
+    @patch("os.path")
+    @patch("os.remove")
+    def test_delete_session_token_file(self, mock_remove, mock_path):
+        """正常にセッショントークンが delete できること"""
+        mock_path.exists.return_value = True
+
+        baas.Service.delete_session_token_file()
+
+        mock_remove.assert_called_once()
+
+    def test_verify_session_token(self):
+        """正常にセッショントークンが検証できること"""
+        service = baas.Service(self.get_sample_param())
+
+        service.session_token = "testToken"
+        service.session_token_expire = time.time() + 1
+
+        service.verify_session_token()
+
+    def test_verify_session_token_no_token(self):
+        """正常にセッショントークンがない場合は例外が raise されること"""
+        service = baas.Service(self.get_sample_param())
+
+        with pytest.raises(Exception):
+            service.verify_session_token()
+
+    def test_verify_session_token_expired(self):
+        """正常にセッショントークンが期限切れの場合は例外が raise されること"""
+        service = baas.Service(self.get_sample_param())
+
+        service.session_token = "testToken"
+        service.session_token_expire = time.time()
+
+        with pytest.raises(Exception):
+            service.verify_session_token()

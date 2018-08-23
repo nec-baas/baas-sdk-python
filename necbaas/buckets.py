@@ -12,6 +12,10 @@ class Buckets(object):
     Args:
         service (Service): Service
         bucket_type (str): Bucket type, "object" or "file".
+
+    Attributes:
+        service (Service): Service
+        bucket_type (str): Bucket type, "object" or "file".
     """
 
     def __init__(self, service, bucket_type):

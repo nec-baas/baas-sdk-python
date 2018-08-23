@@ -2,9 +2,13 @@
 """
 BaaS access service module
 """
+import os
 import requests
 import logging
 import copy
+import json as json_lib
+import yaml
+import time
 from requests import Response
 
 
@@ -37,33 +41,36 @@ class Service(object):
                 http: Http Proxy (host:port)
                 https: Https Proxy (host:port)
 
+    Attributes:
+        param (dict): Service parameters, passed by constructor argument.
+        session_token (str): Session Token
+        session_token_expire (int): Session Token expire time (unix epoch seconds)
+        verify_server_cert (bool): Verify server cert (default: True)
+        logger (logging.Logger): Logger. You can change log level with setLevel()
     """
 
-    param = None
-    # type: dict
-    """Service parameters, passed by constructor argument."""
+    _config_files = (
+        os.path.expanduser("~/.baas/python/python_config.yaml"),
+        "/etc/baas/python/python_config.yaml")
+    # type: tuple
 
-    session_token = None
+    _SESSION_TOKEN_FILE_DIR = os.path.expanduser("~/.baas/python")
     # type: str
-    """Session Token"""
 
-    session_token_expire = None
-    # type: int
-    """Session Token expire time (unix epoch seconds)"""
+    _SESSION_TOKEN_FILE_NAME = "session_token.json"
+    # type: str
 
-    verify_server_cert = True
-    # type: bool
-    """Verify server cert (default: True)"""
+    _SESSION_TOKEN_FILE_PATH = os.path.join(_SESSION_TOKEN_FILE_DIR, _SESSION_TOKEN_FILE_NAME)
+    # type: str
 
-    logger = None
-    # type: logging.Logger
-    """Logger. You can change log level with setLevel()"""
-
-    def __init__(self, param):
-        # (dict) -> None
+    def __init__(self, param=None):
+        # type: (dict) -> None
         """
         Constructor.
         """
+        if param is None:
+            param = Service._read_config_file()
+
         # verify params
         if "baseUrl" not in param:
             raise ValueError("No baseUrl")
@@ -82,8 +89,32 @@ class Service(object):
 
         self.param = param
         self.session_token = None
+        self.session_token_expire = None
+        self.verify_server_cert = True
         self.logger = logging.getLogger("necbaas")
         self.logger.setLevel(logging.WARNING)
+
+    @staticmethod
+    def _read_config_file():
+        # type: () -> dict
+        for path in Service._config_files:
+            try:
+                with open(path, encoding="utf-8") as config_file:
+                    return yaml.load(config_file)
+            except Exception:
+                pass
+        raise Exception("No service parameters")
+
+    def save_config(self, path):
+        # type: (str) -> None
+        """
+        Save configuration to file.
+
+        Args:
+            path (str): file path
+        """
+        with open(path, "w", encoding="utf-8") as config_file:
+            yaml.dump(self.param, config_file, default_flow_style=False)
 
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None, stream=False):
         # (str, str, dict, Any, dict, dict) -> Response
@@ -174,3 +205,61 @@ class Service(object):
         else:
             self.logger.debug("HTTP response: status=%d", status)
         return res
+
+    def load_session_token(self):
+        # type: () -> None
+        """
+        Load session token from file.
+        If session token file does not exist, session token is cleared.
+        """
+        if not os.path.exists(Service._SESSION_TOKEN_FILE_PATH):
+            self.session_token = None
+            self.session_token_expire = None
+            return
+
+        with open(Service._SESSION_TOKEN_FILE_PATH, 'r') as token_file:
+            token = json_lib.load(token_file)
+
+        if "sessionToken" not in token:
+            raise Exception("No sessionToken")
+        if "sessionTokenExpire" not in token:
+            raise Exception("No sessionTokenExpire")
+
+        self.session_token = token["sessionToken"]
+        self.session_token_expire = token["sessionTokenExpire"]
+
+    def save_session_token(self):
+        # type: () -> None
+        """
+        Save session token to file.
+        """
+        if not os.path.exists(Service._SESSION_TOKEN_FILE_DIR):
+            os.makedirs(Service._SESSION_TOKEN_FILE_DIR)
+
+        if self.session_token is None:
+            raise Exception("No session token")
+
+        with open(Service._SESSION_TOKEN_FILE_PATH, 'w') as token_file:
+            session_token = {
+                "sessionToken": self.session_token,
+                "sessionTokenExpire": self.session_token_expire}
+            json_lib.dump(session_token, token_file)
+
+    @staticmethod
+    def delete_session_token_file():
+        # type: () -> None
+        """
+        Delete session token file.
+        """
+        if os.path.exists(Service._SESSION_TOKEN_FILE_PATH):
+            os.remove(Service._SESSION_TOKEN_FILE_PATH)
+
+    def verify_session_token(self):
+        # type: () -> None
+        """
+        Verify session token in instance.
+        """
+        if self.session_token is None:
+            raise Exception("No session token")
+        if self.session_token_expire <= time.time():
+            raise Exception("Session token is expired")

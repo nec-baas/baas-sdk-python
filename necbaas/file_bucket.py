@@ -14,6 +14,10 @@ class FileBucket(object):
     Args:
         service (Service): Service
         bucket_name (str): Bucket name
+
+    Attributes:
+        service (Service): Service
+        bucket_name (str): Bucket name
     """
 
     def __init__(self, service, bucket_name):
@@ -94,7 +98,7 @@ class FileBucket(object):
         return self._upload(filename, data, content_type, "POST", acl=acl)
 
     def update(self, filename, data, content_type="application/octet-stream", meta_etag=None, file_etag=None):
-        # type: (str, any, str) -> dict
+        # type: (str, any, str, str, str) -> dict
         """
         Update and replace file body.
 
@@ -129,10 +133,11 @@ class FileBucket(object):
         return res
 
     def _get_file_path(self, filename):
+        # type: (str) -> str
         return "/files/{}/{}".format(self.bucket_name, filename)
 
     def download(self, filename, stream=False):
-        # type: (str) -> Response
+        # type: (str, bool) -> Response
         """
         Download file.
 
