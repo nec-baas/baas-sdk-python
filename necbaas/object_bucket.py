@@ -64,7 +64,7 @@ class ObjectBucket(object):
         Examples:
             ::
 
-                (results, count) = bucket.query(where={"product_name": "orange"}, order="-updatedAt", limit=100)
+                (results, count) = bucket.query_with_count(where={"product_name": "orange"}, order="-updatedAt", limit=100)
 
         Args:
             where (dict): Query conditions (JSON) (optional)
