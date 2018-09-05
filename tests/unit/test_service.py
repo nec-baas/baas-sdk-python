@@ -41,6 +41,14 @@ class TestService(object):
         service = baas.Service(param)
         assert service.param["baseUrl"] == "http://localhost/api"
 
+    @pytest.mark.parametrize("base_url", [u"http://ホスト名/api/", "http://ホスト名/api"])
+    def test_init_base_url_jp(self, base_url):
+        """日本語 baseUrl が正常に初期化されること"""
+        param = self.get_sample_param()
+        param["baseUrl"] = base_url
+        service = baas.Service(param)
+        assert service.param["baseUrl"] == u"http://ホスト名/api"
+
     def _test_init_bad_sub(self, key):
         param = self.get_sample_param()
         del param[key]
@@ -140,6 +148,20 @@ class TestService(object):
         assert headers["X-Application-Id"] == "app1"
         assert headers["X-Application-Key"] == "key1"
         assert headers["X-Session-Token"] == "token1"
+
+    @patch("necbaas.Service._do_request")
+    def test_execute_rest_jp(self, mock):
+        """正常に日本語ありの URL で REST API を呼び出せること"""
+        param = self.get_sample_param()
+        param["baseUrl"] = u"http://ホスト名/api"
+        service = baas.Service(param)
+
+        mock.return_value = {}
+        ret = service.execute_rest("GET", "a/b/c")
+        assert ret == {}
+
+        kwargs = mock.call_args[1]
+        assert kwargs["url"] == "http://ホスト名/api/1/tenant1/a/b/c"
 
     @patch("necbaas.Service._do_request")
     def test_execute_rest_with_headers(self, mock):

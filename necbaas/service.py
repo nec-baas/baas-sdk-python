@@ -3,6 +3,7 @@
 BaaS access service module
 """
 import os
+import sys
 import io
 import requests
 import logging
@@ -11,6 +12,8 @@ import json as json_lib
 import yaml
 import time
 from requests import Response
+
+_is_py2 = (sys.version_info[0] == 2)
 
 
 class Service(object):
@@ -83,10 +86,18 @@ class Service(object):
             raise ValueError("No appKey")
 
         # normalise baseUrl
-        base_url = str(param["baseUrl"])
+        if _is_py2:
+            if isinstance(param["baseUrl"], unicode):
+                base_url = unicode(param["baseUrl"])
+            else:
+                base_url = param["baseUrl"].decode("utf-8")
+        else:
+            base_url = str(param["baseUrl"])
+
         if base_url.endswith("/"):
             base_url = base_url[0:-1]
-            param["baseUrl"] = base_url
+
+        param["baseUrl"] = base_url
 
         self.param = param
         self.session_token = None
@@ -115,7 +126,7 @@ class Service(object):
             path (str): file path
         """
         with io.open(path, "w", encoding="utf-8") as config_file:
-            yaml.dump(self.param, config_file, default_flow_style=False)
+            yaml.dump(self.param, config_file, default_flow_style=False, allow_unicode=True, encoding="utf-8")
 
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None, stream=False):
         # (str, str, dict, Any, dict, dict) -> Response
@@ -141,8 +152,9 @@ class Service(object):
         if path.startswith("/"):
             path = path[1:]
 
+        base_url = self.param["baseUrl"].encode("utf-8") if _is_py2 else self.param["baseUrl"]
         args = {
-            "url": "{}/1/{}/{}".format(self.param["baseUrl"], self.param["tenantId"], path)
+            "url": "{}/1/{}/{}".format(base_url, self.param["tenantId"], path)
         }
 
         # query parameters
