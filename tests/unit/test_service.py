@@ -6,6 +6,7 @@ import yaml
 import time
 import sys
 import os
+import io
 
 import necbaas as baas
 
@@ -72,7 +73,7 @@ class TestService(object):
             "  http: proxy.example.com:8080\n" \
             "  https: proxy.example2.com:8080\n"
  
-        with patch(builtin + ".open", mock_open(read_data=config_file)):
+        with patch("io.open", mock_open(read_data=config_file)):
             service = baas.Service()
 
         assert service.param["baseUrl"] == "http://localhost/api"
@@ -86,7 +87,7 @@ class TestService(object):
     def test_init_file_not_found(self):
         """設定ファイルが存在しない場合はエラーとなること"""
         m = mock_open()
-        with patch(builtin + ".open", m) as mocked_open:
+        with patch("io.open", m) as mocked_open:
             mocked_open.side_effect = IOError()
             with pytest.raises(Exception):
                 baas.Service()
@@ -102,7 +103,7 @@ class TestService(object):
 
         path = "/tmp/config.yaml"
         m = mock_open()
-        with patch(builtin + ".open", m, create=True):
+        with patch("io.open", m, create=True):
             service.save_config(path)
 
         m.assert_called_with(path, 'w', encoding='utf-8')

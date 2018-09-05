@@ -3,6 +3,7 @@
 BaaS access service module
 """
 import os
+import io
 import requests
 import logging
 import copy
@@ -99,7 +100,7 @@ class Service(object):
         # type: () -> dict
         for path in Service._config_files:
             try:
-                with open(path, encoding="utf-8") as config_file:
+                with io.open(path, encoding="utf-8") as config_file:
                     return yaml.load(config_file)
             except Exception:
                 pass
@@ -113,7 +114,7 @@ class Service(object):
         Args:
             path (str): file path
         """
-        with open(path, "w", encoding="utf-8") as config_file:
+        with io.open(path, "w", encoding="utf-8") as config_file:
             yaml.dump(self.param, config_file, default_flow_style=False)
 
     def execute_rest(self, method, path, query=None, data=None, json=None, headers=None, stream=False):
