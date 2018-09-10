@@ -30,7 +30,7 @@ except IOError:
 
 setup(
     name='necbaas',
-    version='7.5.0b1',
+    version='7.5.0',
     packages=['necbaas'],
     description='NEC Mobile Backend platform Python SDK',
     long_description=description,
@@ -42,7 +42,7 @@ setup(
         'doc': doc_requires
     },
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
