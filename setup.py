@@ -35,7 +35,7 @@ setup(
     description='NEC Mobile Backend platform Python SDK',
     long_description=description,
     author='NEC Corporation',
-    url='http://jpn.nec.com/iot/platform/iotpfservice',
+    url='https://nec-baas.github.io/',
     install_requires=requires,
     extras_require={
         'test': test_requires,
@@ -44,7 +44,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
     ]
