@@ -1,3 +1,11 @@
+2018-09-12 : ver 7.5.0b2
+
+        * 機能追加・変更
+        　- BaaS接続設定の外部ファイル読み出しをサポート
+          - User：セッショントークン永続化
+          - ObjectBucket：バッチ、ロングクエリ、論理削除、Aggregation サポート
+          - Bucket, Group, Push 機能追加
+
 2018-05-21 : ver 7.5.0b1
 
         * Service, ObjectBucket, FileBucket, User, Apigw 追加
