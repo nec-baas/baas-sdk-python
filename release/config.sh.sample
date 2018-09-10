@@ -1,0 +1,6 @@
+# バージョン
+VERSION=7.5.0
+ 
+# Git タグまたはブランチ
+#TAG=origin/release/7.5.0
+TAG=HEAD
