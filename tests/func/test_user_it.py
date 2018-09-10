@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import requests
 import pytest
 from requests.exceptions import HTTPError
 
@@ -24,8 +23,8 @@ class TestUser(object):
         u.email = "user1@example.com"
         u.password = "Passw0rD"
         u.options = {"realname": "Foo Bar"}
-        u.register()
-        return u
+        res = u.register()
+        return u, res
 
     def test_register(self):
         """
@@ -47,6 +46,34 @@ class TestUser(object):
         e = ei.value
         s = e.response.status_code
         assert s == 409
+
+    @pytest.mark.parametrize("etag", [None, True])
+    def test_update(self, etag):
+        """
+        ユーザ更新テスト(update)
+        """
+        _, reg_user = self.register_user()
+
+        u = baas.User(self.masterService)
+        u.username = "user2"
+        u.email = "user2@example.com"
+        u.password = "Passw0rD2"
+        u.options = {"realname": "Foo Bar 2"}
+        res = u.update(reg_user["_id"], etag if etag is None else reg_user["etag"])
+        assert res["username"] == "user2"
+        print(res)
+
+    def test_update_etag_mismatch(self):
+        """
+        ユーザ更新テスト(update)： Etag不正の場合はエラーとなること
+        """
+        _, reg_user = self.register_user()
+
+        u = baas.User(self.masterService)
+        with pytest.raises(HTTPError) as ei:
+            u.update(reg_user["_id"], "etag")
+        e = ei.value
+        assert e.response.status_code == 409
 
     def test_query_all(self):
         """
@@ -96,7 +123,7 @@ class TestUser(object):
         """
         正常ログイン
         """
-        u = self.register_user()
+        u, _ = self.register_user()
         assert self.service.session_token is None
 
         res = baas.User.login(self.service, username=username, email=email, password=u.password)
@@ -105,13 +132,13 @@ class TestUser(object):
         assert self.service.session_token is not None
         assert self.service.session_token_expire is not None
 
-        res = baas.User.logout(self.service)
+        baas.User.logout(self.service)
 
     def test_login_bad_password(self):
         """
         パスワード不正ログイン: 401 Unauthorized となること
         """
-        u = self.register_user()
+        u, _ = self.register_user()
 
         with pytest.raises(HTTPError) as ei:
             baas.User.login(self.service, username=u.username, password="BAD_PASS")
@@ -122,7 +149,7 @@ class TestUser(object):
         """
         正常ログアウト / 二重ログアウト
         """
-        u = self.register_user()
+        u, _ = self.register_user()
         baas.User.login(self.service, username=u.username, password=u.password)
 
         # 正常にログアウトできること
@@ -135,3 +162,47 @@ class TestUser(object):
             baas.User.logout(self.service)
         e = ei.value
         assert e.response.status_code == 401
+
+    def test_get(self):
+        """
+        正常取得
+        """
+        _, reg_user = self.register_user()
+
+        res = baas.User.get(self.masterService, reg_user["_id"])
+        assert res["username"] == "user1"
+
+    def test_remove(self):
+        """
+        正常削除
+        """
+        _, reg_user = self.register_user()
+
+        res = baas.User.remove(self.masterService, reg_user["_id"])
+        assert res["result"] == "ok"
+
+        # 二重削除は 404
+        with pytest.raises(HTTPError) as ei:
+            baas.User.remove(self.masterService, reg_user["_id"])
+        e = ei.value
+        assert e.response.status_code == 404
+
+    @pytest.mark.skip(reason='need to send email')
+    def test_reset_password_by_username(self):
+        """
+        パスワードリセット要求正常(ユーザ名)
+        """
+        u, _ = self.register_user()
+
+        res = baas.User.reset_password(self.service, username=u.username)
+        assert res["result"] == "ok"
+
+    @pytest.mark.skip(reason='need to send email')
+    def test_reset_password_by_email(self):
+        """
+        パスワードリセット要求正常(E-mail)
+        """
+        u, _ = self.register_user()
+
+        res = baas.User.reset_password(self.service, email=u.email)
+        assert res["result"] == "ok"

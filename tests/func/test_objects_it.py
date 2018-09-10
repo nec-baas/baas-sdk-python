@@ -18,8 +18,7 @@ class TestObjectStorage(TestStorageBase):
         b = baas.ObjectBucket(self.service, "bucket1")
 
         for i in range(count):
-            #print(i)
-            b.insert({"key": i})
+            b.insert({"key": i, "type": "A" if i % 2 == 1 else "B"})
 
         return b
 
@@ -70,6 +69,14 @@ class TestObjectStorage(TestStorageBase):
         assert "createdAt" not in results[0]  # projection
         assert "updatedAt" in results[0]
 
+        # soft delete
+        b.remove(results[0]["_id"], soft_delete=True)
+
+        results = b.query(where=where, order="-key", skip=2, limit=5, projection=projection, delete_mark=True)
+        assert len(results) == 5  # limit
+        assert results[0]["key"] == 6  # where, order, skip
+        assert results[4]["key"] == 2
+
     def test_query_with_count(self):
         """件数付きクエリできること"""
         b = self.insert_sample_data(10)
@@ -77,6 +84,17 @@ class TestObjectStorage(TestStorageBase):
         (results, count) = b.query_with_count(limit=5)
         assert len(results) == 5
         assert count == 10
+
+    def test_long_query(self):
+        """クエリ条件が長い場合はロングクエリで実行されること"""
+        b = self.insert_sample_data(10)
+
+        where = {"key": {"$lt": 9}, "etag": {"$ne": "a" * 1500}}
+        projection = {"createdAt": 0}
+        results = b.query(where=where, order="-key", skip=2, limit=5, projection=projection)
+        assert len(results) == 5  # limit
+        assert results[0]["key"] == 6  # where, order, skip
+        assert results[4]["key"] == 2
 
     @pytest.mark.parametrize("good_etag", [None, True, False])
     def test_update(self, good_etag):
@@ -136,3 +154,54 @@ class TestObjectStorage(TestStorageBase):
         res = b.remove_with_query()
         assert res["result"] == "ok"
         assert res["deletedObjects"] == 4
+
+    def test_batch(self):
+        """正常に batch 処理ができること"""
+        b = baas.ObjectBucket(self.service, "bucket1")
+
+        # insert
+        requests = [
+            {"op": "insert", "data": {"key": 1}},
+            {"op": "insert", "data": {"key": 2}}
+        ]
+        results = b.batch(requests)
+
+        assert len(results) == 2
+        assert results[0]["data"]["key"] == 1
+        assert results[1]["data"]["key"] == 2
+
+        # update/(soft)delete
+        requests = [
+            {"op": "update", "_id": results[0]["_id"], "data": {"key": 11}},
+            {"op": "delete", "_id": results[1]["_id"]}
+        ]
+        results = b.batch(requests, True)
+
+        assert len(results) == 2
+        assert results[0]["data"]["key"] == 11
+        assert results[1]["result"] == "ok"
+
+        # update/delete
+        requests = [
+            {"op": "update", "_id": results[0]["_id"], "data": {"key": 21}},
+            {"op": "delete", "_id": results[1]["_id"]}
+        ]
+        results = b.batch(requests, True)
+
+        assert len(results) == 2
+        assert results[0]["data"]["key"] == 21
+        assert results[1]["result"] == "ok"
+
+    @pytest.mark.parametrize("options", [None, {"allowDiskUse": True}])
+    def test_aggregate(self, options):
+        """正常に一括削除できること"""
+        b = self.insert_sample_data(10)
+        assert len(b.query()) == 10
+
+        pipeline = [{"$group": {"_id": "$type", "total": {"$sum": "$key"}}}]
+        results = b.aggregate(pipeline=pipeline, options=options)
+        assert len(results) == 2
+        assert results[0]["_id"] == "A"
+        assert results[0]["total"] == 25
+        assert results[1]["_id"] == "B"
+        assert results[1]["total"] == 20

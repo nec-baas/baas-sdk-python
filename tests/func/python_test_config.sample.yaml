@@ -1,7 +1,17 @@
 # Save this config file to $HOME/.baas/python_test_config.yaml
 service:
   baseUrl: http://baas.example.com/api
-  tenantId: pytest
+  tenantId: pytest_tenantA
+  appId: xxxxx
+  appKey: xxxxx
+  masterKey: xxxxx
+  #proxy:
+  #  http: xxxxx
+  #  https: xxxxx
+
+service2:
+  baseUrl: http://baas.example.com/api
+  tenantId: pytest_tenantB
   appId: xxxxx
   appKey: xxxxx
   masterKey: xxxxx

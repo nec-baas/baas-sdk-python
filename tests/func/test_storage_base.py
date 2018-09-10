@@ -21,18 +21,7 @@ class TestStorageBase(object):
 
         self.buckets = baas.Buckets(self.masterService, bucket_type)
 
-        util.remove_all_users()
-
-        # Register user
-        user = baas.User(self.service)
-        user.username = "user1"
-        user.email = "user1@example.com"
-        user.password = "Passw0rD"
-        user.register()
-        self.user = user
-
-        # Login
-        baas.User.login(self.service, username=user.username, password=user.password)
+        self.user = util.setup_user(self.service)
 
         try:
             self.buckets.remove("bucket1")
@@ -58,3 +47,16 @@ class TestStorageBase(object):
             baas.User.remove(self.masterService, users[0]["_id"])
         except HTTPError:
             pass  # ignore...
+
+    def remove_all_buckets(self):
+        for bucket in self.buckets.query():
+            self.buckets.remove(bucket["name"])
+
+    def create_test_data(self, length):
+        """テストデータ生成"""
+        ary = []
+        for i in range(length):
+            alphabet = "abcdefghijklmnopqrstuvwxyz"
+            idx = i % len(alphabet)
+            ary.append(alphabet[idx:idx+1])
+        return ''.join(ary)

@@ -19,6 +19,14 @@
 BaaSサーバに接続するための設定を $HOME/.baas/python_test_config.yaml に格納してください。
 ファイルテンプレートは tests/func/python_test_config.sample.yaml にあります。
 
+!!!注意!!!
+指定したテナントのデータは削除されます。
+必ず FT 専用のテナントを作って実行してください。
+
+また、$HOME/.baas/python ディレクトリは削除されます。
+設定ファイル等の必要なファイルは退避させてください。
+!!!注意!!!
+
 機能テストは以下手順で実施してください
 
     $ pytest -v tests/func

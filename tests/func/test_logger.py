@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
+import pytest
+from requests import HTTPError
 import necbaas as baas
 from . import util
 
@@ -18,3 +20,6 @@ class TestLogger(object):
         """デバッグログが出力されること(手動テスト、目視確認すること)"""
         self.master_service.logger.setLevel(logging.DEBUG)
         baas.User.query(self.master_service)
+
+        with pytest.raises(HTTPError):
+            baas.User.login(self.master_service, username="tmpname", password="pass")

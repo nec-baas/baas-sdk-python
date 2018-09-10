@@ -15,15 +15,6 @@ class TestFileStorage(TestStorageBase):
     def teardown(self):
         self.cleanup()
 
-    def create_test_data(self, length):
-        """テストデータ生成"""
-        ary = []
-        for i in range(length):
-            alphabet = "abcdefghijklmnopqrstuvwxyz"
-            idx = i % len(alphabet)
-            ary.append(alphabet[idx:idx+1])
-        return ''.join(ary)
-
     def upload_file_one(self):
         # type: () -> (baas.FileBucket, str, dict)
         b = baas.FileBucket(self.service, "bucket1")
@@ -159,4 +150,3 @@ class TestFileStorage(TestStorageBase):
 
         # ファイル削除確認
         assert len(b.query()) == 0
-

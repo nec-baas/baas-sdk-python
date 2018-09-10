@@ -12,11 +12,27 @@ logging.basicConfig(level=logging.WARNING)
 
 
 class TestApigw(object):
-    service = None
-    # type: baas.Service
-
     def setup(self):
         self.service = util.create_service()
+
+    @pytest.mark.skip(reason='need to register cloud function')
+    def test_execute(self):
+        """
+        API GW呼び出し正常
+
+        Note:
+            以下のCloudFunctionを事前に登録する
+            API Name: api1
+            subpath: subpath1/subpath2
+            response json: {"message": "Hello World!"}
+        """
+        self.service.logger.setLevel(logging.DEBUG)  # REST API log
+
+        apigw = baas.Apigw(self.service, "api1", "GET", "subpath1/subpath2")
+
+        r = apigw.execute()
+        res = r.json()
+        assert res["message"] == "Hello World!"
 
     def test_execute_nonexist(self):
         """存在しない APIGW 呼び出し。404 Not Found となること"""
