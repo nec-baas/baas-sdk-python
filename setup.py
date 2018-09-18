@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
-import codecs
+import os
+from codecs import open
 
 requires = [
     'requests>=2.18.0'
@@ -21,16 +22,22 @@ doc_requires = [
     'sphinx-rtd-theme'
 ]
 
+here = os.path.abspath(os.path.dirname(__file__))
+
+about = {}
 try:
-    with codecs.open("Description.rst", encoding="utf-8") as fp:
-        description = fp.read()
+    with open(os.path.join(here, 'necbaas', '__version__.py'), encoding="utf-8") as f:
+        exec(f.read(), about)
+
+    with open("Description.rst", encoding="utf-8") as f:
+        description = f.read()
 except IOError:
     # for tox
     description = "dummy description"
 
 setup(
     name='necbaas',
-    version='7.5.0',
+    version=about['__version__'],
     packages=['necbaas'],
     description='NEC Mobile Backend platform Python SDK',
     long_description=description,
