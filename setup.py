@@ -29,7 +29,7 @@ try:
     with open(os.path.join(here, 'necbaas', '__version__.py'), encoding="utf-8") as f:
         exec(f.read(), about)
 
-    with open("Description.rst", encoding="utf-8") as f:
+    with open("README.md", encoding="utf-8") as f:
         description = f.read()
 except IOError:
     # for tox
@@ -41,8 +41,9 @@ setup(
     packages=['necbaas'],
     description='NEC Mobile Backend platform Python SDK',
     long_description=description,
+    long_description_content_type='text/markdown',
     author='NEC Corporation',
-    url='https://nec-baas.github.io/',
+    url='https://github.com/nec-baas/baas-sdk-python',
     install_requires=requires,
     extras_require={
         'test': test_requires,
