@@ -1,2 +1,1 @@
-MANIFEST.in
-README.md
+include README.md Pipfile ChangeLog LICENSE OSS.html
