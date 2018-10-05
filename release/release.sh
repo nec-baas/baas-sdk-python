@@ -19,19 +19,22 @@ mkdir -p $SRCDIR
 
 # func test
 ( cd $SRCDIR && pytest -v tests/func ) \
-    || { echo "unit test error"; exit 1; }
+    || { echo "func test error"; exit 1; }
+
+# archive package files 
+( cd $SRCDIR && ./setup.py sdist ) \
+    || { echo " archive package files error"; exit 1; }
 
 # ディレクトリ作成
 /bin/rm -rf $DESTDIR
-mkdir -p $DESTDIR/necbaas
+mkdir -p $DESTDIR
 
 # ファイルコピー
-cp $SRCDIR/necbaas/*.py $DESTDIR/necbaas
+cp $SRCDIR/dist/$PACKAGE_NAME $DESTDIR
 cp -r $SRCDIR/sample $DESTDIR/sample
-cp -r $SRCDIR/docs $DESTDIR/docs
 
 # その他ファイルコピー
-for i in ChangeLog LICENSE OSS.html README.md  setup.py Pipfile tox.ini Description.rst MANIFEST.in build-doc.sh; do
+for i in ChangeLog LICENSE OSS.html README.md; do
     cp $SRCDIR/$i $DESTDIR/
 done
 
