@@ -30,17 +30,7 @@ mkdir -p $SRCDIR
 mkdir -p $DESTDIR
 
 # ファイルコピー
-cp $SRCDIR/dist/$PACKAGE_NAME $DESTDIR
-cp -r $SRCDIR/sample $DESTDIR/sample
-
-# その他ファイルコピー
-for i in ChangeLog LICENSE OSS.html README.md; do
-    cp $SRCDIR/$i $DESTDIR/
-done
-
-### create artifact
-(cd $OUTDIR && tar cvzf $DEST.tar.gz $DEST)
+cp $SRCDIR/dist/necbaas-${VERSION}.tar.gz $DESTDIR
 
 echo "Done."
-
 
