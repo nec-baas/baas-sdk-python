@@ -26,7 +26,7 @@ class Buckets(object):
         if bucket_type is not "object" and bucket_type is not "file":
             raise ValueError("bad bucket_type")
 
-    def upsert(self, name, desc="", acl=None, content_acl=None):
+    def upsert(self, name, desc="", acl=None, content_acl=None, no_acl=False):
         # type: (str, str, dict, dict) -> dict
         """
         Create/Update bucket.
@@ -36,6 +36,7 @@ class Buckets(object):
             desc (str): Description (mandatory for update)
             acl (dict): Bucket ACL (mandatory for update)
             content_acl (dict): Content ACL (mandatory for update)
+            no_acl (bool): Disable object level ACL control (for object bucket only)
 
         Returns:
             dict: Response JSON
@@ -47,6 +48,9 @@ class Buckets(object):
             body["ACL"] = acl
         if content_acl is not None:
             body["contentACL"] = content_acl
+        if no_acl:
+            body["noAcl"] = no_acl
+
         r = self.service.execute_rest("PUT", "buckets/{}/{}".format(self.bucket_type, name), json=body)
         return r.json()
 
