@@ -67,6 +67,9 @@ class Service(object):
     _SESSION_TOKEN_FILE_PATH = os.path.join(_SESSION_TOKEN_FILE_DIR, _SESSION_TOKEN_FILE_NAME)
     # type: str
 
+    _default_timeout = None
+    # type: float or tuple
+
     def __init__(self, param=None):
         # type: (dict) -> None
         """
@@ -194,6 +197,9 @@ class Service(object):
         if stream:
             args["stream"] = True
 
+        if Service._default_timeout is not None:
+            args["timeout"] = Service._default_timeout
+
         return self._do_request(method, **args)
 
     def _do_request(self, method, **kwargs):
@@ -276,3 +282,38 @@ class Service(object):
             raise Exception("No session token")
         if self.session_token_expire <= time.time():
             raise Exception("Session token is expired")
+
+    @staticmethod
+    def get_default_timeout():
+        # type: () -> float or tuple
+        """
+        Get default timeout.
+
+        Returns:
+            float or tuple: timeout
+        """
+        return Service._default_timeout
+
+    @staticmethod
+    def set_default_timeout(timeout):
+        # type (float or tuple) -> None
+        """
+        Set default timeout.
+
+        Examples:
+            ::
+
+                # Set both connect timeout and read timeout to 5 seconds.
+                necbaas.Service.set_default_timeout(5)
+
+                # Set connect timeout to 3.05 seconds and read timeout to 27 seconds.
+                necbaas.Service.set_default_timeout((3.05, 27))
+
+                # Clear timeout value.
+                necbaas.Service.set_default_timeout(None)
+
+        Args:
+            timeout (float or tuple): How many seconds to wait for the server to send data
+                before giving up, as a float, or a (connect timeout, read timeout) tuple.
+        """
+        Service._default_timeout = timeout

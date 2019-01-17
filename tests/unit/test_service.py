@@ -125,6 +125,22 @@ class TestService(object):
             write_string += args[0][0]
         return write_string
 
+    def test_default_timeout(self):
+        """正常にデフォルトタイムアウト値の操作ができること"""
+        # 初期値
+        assert  baas.Service.get_default_timeout() is None
+
+        # 数値
+        self._test_default_timeout(5)
+        # Tuple
+        self._test_default_timeout((3.05, 27))
+        # 未設定
+        self._test_default_timeout(None)
+
+    def _test_default_timeout(self, value):
+        baas.Service.set_default_timeout(value)
+        assert baas.Service.get_default_timeout() is value
+
     @patch("necbaas.Service._do_request")
     def test_execute_rest(self, mock):
         """正常に REST API を呼び出せること"""
@@ -148,6 +164,23 @@ class TestService(object):
         assert headers["X-Application-Id"] == "app1"
         assert headers["X-Application-Key"] == "key1"
         assert headers["X-Session-Token"] == "token1"
+
+        # timeout は含まれない
+        assert "timeout" not in kwargs
+
+    @patch("necbaas.Service._do_request")
+    def test_execute_rest_with_timeout(self, mock):
+        """正常にタイムアウト付きで REST API を呼び出せること"""
+        baas.Service.set_default_timeout(10)
+
+        service = baas.Service(self.get_sample_param())
+
+        mock.return_value = {}
+        ret = service.execute_rest("GET", "a/b/c")
+        assert ret == {}
+
+        timeout = mock.call_args[1]["timeout"]
+        assert timeout is 10
 
     @patch("necbaas.Service._do_request")
     def test_execute_rest_jp(self, mock):
